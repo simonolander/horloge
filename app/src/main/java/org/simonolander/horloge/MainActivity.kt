@@ -14,7 +14,9 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
+import org.simonolander.horloge.model.Beat
 import org.simonolander.horloge.ui.theme.HorlogeTheme
+import kotlin.time.Duration.Companion.seconds
 
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -28,14 +30,19 @@ class MainActivity : ComponentActivity() {
                     Column {
                         Greeting("Android")
                         Button(modifier = Modifier.fillMaxWidth(), onClick = {
-                            startService(Intent(this@MainActivity, HorlogeService::class.java))
+                            val intent = Intent(this@MainActivity, HorlogeService::class.java)
+                            intent.putExtra(
+                                HorlogeService.BEATS_KEY,
+                                arrayOf(Beat(4.seconds, R.raw.cello_pluck))
+                            )
+                            startForegroundService(intent)
                         }) {
-                            Text(text = "Launch service")
+                            Text(text = "Start")
                         }
                         Button(modifier = Modifier.fillMaxWidth(), onClick = {
-                            startForegroundService(Intent(this@MainActivity, HorlogeService::class.java))
+                            stopService(Intent(this@MainActivity, HorlogeService::class.java))
                         }) {
-                            Text(text = "Launch foreground service")
+                            Text(text = "Stop")
                         }
                     }
                 }

@@ -1,3 +1,5 @@
 <resources>
     <string name="app_name">Horloge</string>
+    <string name="channel_name_playback">Playback</string>
+    <string name="channel_description_playback">Controls for audio playback</string>
 </resources>
