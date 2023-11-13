@@ -1,0 +1,212 @@
+package org.simonolander.horloge.ui.component
+
+import android.media.MediaPlayer
+import android.widget.Toast
+import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.text.KeyboardOptions
+import androidx.compose.foundation.verticalScroll
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Add
+import androidx.compose.material.icons.filled.Check
+import androidx.compose.material.icons.filled.Delete
+import androidx.compose.material.icons.filled.PlayArrow
+import androidx.compose.material3.Card
+import androidx.compose.material3.DropdownMenuItem
+import androidx.compose.material3.ExposedDropdownMenuBox
+import androidx.compose.material3.ExposedDropdownMenuDefaults
+import androidx.compose.material3.Icon
+import androidx.compose.material3.IconButton
+import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.Surface
+import androidx.compose.material3.Text
+import androidx.compose.material3.TextField
+import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
+import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.text.input.KeyboardType
+import androidx.compose.ui.tooling.preview.Preview
+import androidx.compose.ui.unit.dp
+import org.simonolander.horloge.model.Beat
+import org.simonolander.horloge.model.Rhythm
+import org.simonolander.horloge.model.Sound
+import org.simonolander.horloge.ui.theme.HorlogeTheme
+import kotlin.time.Duration.Companion.milliseconds
+import kotlin.time.Duration.Companion.seconds
+
+@Composable
+fun RhythmForm(rhythm: Rhythm?, onSave: (Rhythm) -> Unit) {
+    var name by remember { mutableStateOf(rhythm?.name ?: "") }
+    var beats by remember { mutableStateOf(rhythm?.beats ?: emptyList()) }
+
+    Column(
+        modifier = Modifier
+            .fillMaxWidth()
+            .verticalScroll(rememberScrollState()),
+        verticalArrangement = Arrangement.spacedBy(10.dp)
+    ) {
+        Row(modifier = Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.SpaceBetween) {
+            Text(text = "Rhythm", style = MaterialTheme.typography.headlineLarge)
+            IconButton(onClick = { onSave(Rhythm(name, beats)) }) {
+                Icon(imageVector = Icons.Default.Check, contentDescription = "Save rhythm")
+            }
+        }
+        TextField(
+            modifier = Modifier.fillMaxWidth(),
+            value = name,
+            onValueChange = { name = it },
+            label = { Text("Name") },
+        )
+
+        BeatList(beats = beats, onChange = { beats = it })
+    }
+}
+
+@Composable
+fun BeatList(beats: List<Beat>, onChange: (List<Beat>) -> Unit) {
+    Column {
+        Row(modifier = Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.SpaceBetween) {
+            Text(text = "Beats", style = MaterialTheme.typography.headlineMedium)
+            IconButton(onClick = {
+                val list = beats.toMutableList()
+                list.add(0, Beat(Sound.ALL.first(), 10.seconds, 0.seconds))
+                onChange(list)
+            }) {
+                Icon(imageVector = Icons.Default.Add, contentDescription = "Add beat")
+            }
+        }
+        if (beats.isEmpty()) {
+            Text(text = "No beats", style = MaterialTheme.typography.bodyLarge)
+        }
+        Column(verticalArrangement = Arrangement.spacedBy(10.dp)) {
+            for ((index, beat) in beats.withIndex()) {
+                BeatView(beat) {
+                    val list = beats.toMutableList()
+                    if (it != null) {
+                        list[index] = it
+                    } else {
+                        list.removeAt(index)
+                    }
+                    onChange(list)
+                }
+            }
+        }
+    }
+}
+
+@Composable
+fun BeatView(beat: Beat, onChange: (Beat?) -> Unit) {
+    val context = LocalContext.current
+    var expanded by remember { mutableStateOf(false) }
+    val sounds = Sound.ALL
+    Card {
+        Column(Modifier.padding(4.dp), verticalArrangement = Arrangement.spacedBy(10.dp)) {
+            TextField(
+                modifier = Modifier.fillMaxWidth(),
+                value = beat.period.inWholeMilliseconds.toString(),
+                label = { Text("Period (ms)") },
+                keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number),
+                onValueChange = {
+                    onChange(beat.copy(period = it.filter { it.isDigit() }.toLong().milliseconds))
+                })
+
+            TextField(
+                modifier = Modifier.fillMaxWidth(),
+                value = beat.delay.inWholeMilliseconds.toString(),
+                label = { Text("Delay (ms)") },
+                keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number),
+                onValueChange = {
+                    onChange(beat.copy(delay = it.filter(Char::isDigit).toLong().milliseconds))
+                })
+
+            ExposedDropdownMenuBox(
+                expanded = expanded,
+                onExpandedChange = { expanded = it },
+            ) {
+                TextField(
+                    modifier = Modifier
+                        .menuAnchor()
+                        .fillMaxWidth(),
+                    readOnly = true,
+                    value = beat.sound.name,
+                    onValueChange = {},
+                    label = { Text("Sound") },
+                    trailingIcon = { ExposedDropdownMenuDefaults.TrailingIcon(expanded = expanded) },
+                    colors = ExposedDropdownMenuDefaults.textFieldColors(),
+                )
+                ExposedDropdownMenu(
+                    expanded = expanded,
+                    onDismissRequest = { expanded = false },
+                ) {
+                    sounds.forEach { sound ->
+                        DropdownMenuItem(
+                            text = { Text(sound.name) },
+                            onClick = {
+                                expanded = false
+                                onChange(beat.copy(sound = sound))
+                            },
+                            contentPadding = ExposedDropdownMenuDefaults.ItemContentPadding,
+                            trailingIcon = {
+                                IconButton(onClick = {
+                                    MediaPlayer.create(context, sound.resourceId).apply {
+                                        setOnCompletionListener {
+                                            reset()
+                                            release()
+                                        }
+                                        start()
+                                    }
+                                }) {
+                                    Icon(
+                                        imageVector = Icons.Default.PlayArrow,
+                                        contentDescription = "Listen to beat"
+                                    )
+                                }
+                            }
+                        )
+                    }
+                }
+            }
+
+            Row {
+                IconButton(onClick = { onChange(null) }) {
+                    Icon(imageVector = Icons.Default.Delete, contentDescription = "Delete beat")
+                }
+                IconButton(onClick = {
+                    MediaPlayer.create(context, beat.sound.resourceId).apply {
+                        setOnCompletionListener {
+                            reset()
+                            release()
+                        }
+                        start()
+                    }
+                }) {
+                    Icon(
+                        imageVector = Icons.Default.PlayArrow,
+                        contentDescription = "Listen to beat"
+                    )
+                }
+            }
+        }
+    }
+}
+
+@Preview
+@Composable
+fun RhythmFormPreview() {
+    val context = LocalContext.current
+    Surface(Modifier.padding(16.dp)) {
+        HorlogeTheme {
+            RhythmForm(null) {
+                Toast.makeText(context, "Saved", Toast.LENGTH_SHORT).show()
+            }
+        }
+    }
+}
