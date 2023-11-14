@@ -60,13 +60,14 @@ class MainActivity : ComponentActivity() {
                             val rhythm = rhythms.find { it.id == rhythmId }
                             RhythmDestination(
                                 rhythm = rhythm,
-                                onSave = {
+                                onSave = { newRhythm ->
                                     val index = rhythms.indexOfFirst { it.id == rhythmId }
                                     if (index != -1) {
-                                        rhythms[index] = it
+                                        rhythms[index] = newRhythm
                                     } else {
-                                        rhythms.add(0, it)
+                                        rhythms.add(0, newRhythm)
                                     }
+                                    navController.popBackStack("home", false)
                                 },
                             )
                         }
