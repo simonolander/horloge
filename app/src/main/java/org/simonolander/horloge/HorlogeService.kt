@@ -10,7 +10,6 @@ import android.media.MediaPlayer
 import android.os.Build
 import android.os.IBinder
 import android.util.Log
-import android.widget.Toast
 import org.simonolander.horloge.model.Beat
 import java.util.Timer
 import kotlin.concurrent.scheduleAtFixedRate
@@ -31,13 +30,18 @@ class HorlogeService : Service() {
     }
 
     private fun getBeats(intent: Intent): Array<Beat> {
-        val beats = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
+        return if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
             intent.getParcelableArrayExtra(BEATS_KEY, Beat::class.java)
+                ?: throw IllegalArgumentException("Missing parcel field '$BEATS_KEY'")
         } else {
-            @Suppress("UNCHECKED_CAST")
-            intent.getParcelableArrayExtra(BEATS_KEY) as? Array<Beat>
-        } ?: throw IllegalArgumentException("Missing parcel field '$BEATS_KEY'")
-        return beats
+            val list = intent.getParcelableArrayExtra(BEATS_KEY)?.toList()
+                ?: throw IllegalArgumentException("Missing parcel field '$BEATS_KEY'")
+            val beats = list.filterIsInstance<Beat>()
+            if (beats.size != list.size) {
+                throw IllegalArgumentException("Parcel field '$BEATS_KEY' contains non-beat elements: $list")
+            }
+            beats.toTypedArray()
+        }
     }
 
     private fun startForeground() {
@@ -59,7 +63,10 @@ class HorlogeService : Service() {
             this.timer?.cancel()
             val timer = Timer()
             for (beat in beats) {
-                timer.scheduleAtFixedRate(beat.delay.inWholeMilliseconds, beat.period.inWholeMilliseconds) {
+                timer.scheduleAtFixedRate(
+                    beat.delay.inWholeMilliseconds,
+                    beat.period.inWholeMilliseconds
+                ) {
                     playBeat(beat)
                 }
             }
@@ -85,8 +92,9 @@ class HorlogeService : Service() {
     }
 
     override fun onDestroy() {
-        Toast.makeText(this, "Destroy service", Toast.LENGTH_SHORT).show()
-        timer?.cancel()
+        synchronized(this) {
+            timer?.cancel()
+        }
     }
 
     private fun playBeat(beat: Beat) {
