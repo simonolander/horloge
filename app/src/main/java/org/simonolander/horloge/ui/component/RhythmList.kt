@@ -64,11 +64,11 @@ fun RhythmList(
 
 @Composable
 fun RhythmView(rhythm: Rhythm, onPlayClick: () -> Unit, onEditClick: () -> Unit) {
-    Card(modifier = Modifier.fillMaxWidth(), onClick = onPlayClick) {
+    Card(modifier = Modifier.fillMaxWidth(), onClick = onEditClick) {
         Box(Modifier.fillMaxWidth()) {
             Row(modifier = Modifier.align(Alignment.TopEnd)) {
-                IconButton(onClick = onEditClick) {
-                    Icon(imageVector = Icons.Default.Edit, contentDescription = "Edit rhythm")
+                IconButton(onClick = onPlayClick) {
+                    Icon(imageVector = Icons.Default.PlayArrow, contentDescription = "Play rhythm")
                 }
             }
             Column(Modifier.padding(10.dp)) {
