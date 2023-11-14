@@ -59,7 +59,7 @@ class HorlogeService : Service() {
             this.timer?.cancel()
             val timer = Timer()
             for (beat in beats) {
-                timer.scheduleAtFixedRate(0, beat.interval.inWholeMilliseconds) {
+                timer.scheduleAtFixedRate(beat.delay.inWholeMilliseconds, beat.period.inWholeMilliseconds) {
                     playBeat(beat)
                 }
             }
@@ -90,7 +90,7 @@ class HorlogeService : Service() {
     }
 
     private fun playBeat(beat: Beat) {
-        MediaPlayer.create(this, beat.resourceId).apply {
+        MediaPlayer.create(this, beat.sound.resourceId).apply {
             setOnCompletionListener {
                 it.reset()
                 it.release()
