@@ -55,7 +55,10 @@ fun RhythmForm(rhythm: Rhythm?, onSave: (Rhythm) -> Unit) {
     ) {
         Row(modifier = Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.SpaceBetween) {
             Text(text = "Rhythm", style = MaterialTheme.typography.headlineLarge)
-            IconButton(onClick = { onSave(Rhythm(name, beats)) }) {
+            IconButton(onClick = {
+                val id = rhythm?.id ?: Rhythm.randomId()
+                onSave(Rhythm(id, name, beats))
+            }) {
                 Icon(imageVector = Icons.Default.Check, contentDescription = "Save rhythm")
             }
         }
@@ -115,7 +118,7 @@ fun BeatView(beat: Beat, onChange: (Beat?) -> Unit) {
                 label = { Text("Period (ms)") },
                 keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number),
                 onValueChange = {
-                    onChange(beat.copy(period = it.filter { it.isDigit() }.toLong().milliseconds))
+                    onChange(beat.copy(period = toLong(it).milliseconds))
                 })
 
             TextField(
@@ -124,7 +127,7 @@ fun BeatView(beat: Beat, onChange: (Beat?) -> Unit) {
                 label = { Text("Delay (ms)") },
                 keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number),
                 onValueChange = {
-                    onChange(beat.copy(delay = it.filter(Char::isDigit).toLong().milliseconds))
+                    onChange(beat.copy(delay = toLong(it).milliseconds))
                 })
 
             ExposedDropdownMenuBox(
@@ -196,6 +199,10 @@ fun BeatView(beat: Beat, onChange: (Beat?) -> Unit) {
             }
         }
     }
+}
+
+private fun toLong(string: String): Long {
+    return string.filter { it.isDigit() }.takeIf { it.isNotEmpty() }?.toLong() ?: 0
 }
 
 @Preview

@@ -59,7 +59,7 @@ class HorlogeService : Service() {
             this.timer?.cancel()
             val timer = Timer()
             for (beat in beats) {
-                timer.scheduleAtFixedRate(0, beat.period.inWholeMilliseconds) {
+                timer.scheduleAtFixedRate(beat.delay.inWholeMilliseconds, beat.period.inWholeMilliseconds) {
                     playBeat(beat)
                 }
             }
