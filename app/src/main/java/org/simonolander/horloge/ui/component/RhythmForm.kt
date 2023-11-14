@@ -43,7 +43,7 @@ import kotlin.time.Duration.Companion.milliseconds
 import kotlin.time.Duration.Companion.seconds
 
 @Composable
-fun RhythmForm(rhythm: Rhythm?, onSave: (Rhythm) -> Unit) {
+fun RhythmForm(rhythm: Rhythm?, onSave: (Rhythm) -> Unit, onDelete: () -> Unit) {
     var name by remember { mutableStateOf(rhythm?.name ?: "") }
     var beats by remember { mutableStateOf(rhythm?.beats ?: emptyList()) }
 
@@ -55,11 +55,16 @@ fun RhythmForm(rhythm: Rhythm?, onSave: (Rhythm) -> Unit) {
     ) {
         Row(modifier = Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.SpaceBetween) {
             Text(text = "Rhythm", style = MaterialTheme.typography.headlineLarge)
-            IconButton(onClick = {
-                val id = rhythm?.id ?: Rhythm.randomId()
-                onSave(Rhythm(id, name, beats))
-            }) {
-                Icon(imageVector = Icons.Default.Check, contentDescription = "Save rhythm")
+            Row {
+                IconButton(onClick = onDelete, enabled = rhythm != null) {
+                    Icon(imageVector = Icons.Default.Delete, contentDescription = "Delete rhythm")
+                }
+                IconButton(onClick = {
+                    val id = rhythm?.id ?: Rhythm.randomId()
+                    onSave(Rhythm(id, name, beats))
+                }) {
+                    Icon(imageVector = Icons.Default.Check, contentDescription = "Save rhythm")
+                }
             }
         }
         TextField(
@@ -209,11 +214,16 @@ private fun toLong(string: String): Long {
 @Composable
 fun RhythmFormPreview() {
     val context = LocalContext.current
+    fun toast(text: String) {
+        Toast.makeText(context, text, Toast.LENGTH_SHORT).show()
+    }
     Surface(Modifier.padding(16.dp)) {
         HorlogeTheme {
-            RhythmForm(null) {
-                Toast.makeText(context, "Saved", Toast.LENGTH_SHORT).show()
-            }
+            RhythmForm(
+                rhythm = null,
+                onSave = { toast("Saved") },
+                onDelete = { toast("Deleted") },
+            )
         }
     }
 }

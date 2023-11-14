@@ -28,12 +28,16 @@ class MainActivity : ComponentActivity() {
         super.onCreate(savedInstanceState)
         setContent {
             val navController = rememberNavController()
-            val rhythms = remember { mutableStateListOf<Rhythm>(
-                Rhythm(Rhythm.randomId(), "Pling plong", listOf(
-                    Beat(Sound.D_2, 4.seconds, 0.seconds),
-                    Beat(Sound.A_2, 5.seconds, 3.seconds),
-                ))
-            ) }
+            val rhythms = remember {
+                mutableStateListOf<Rhythm>(
+                    Rhythm(
+                        Rhythm.randomId(), "Pling plong", listOf(
+                            Beat(Sound.D_2, 4.seconds, 0.seconds),
+                            Beat(Sound.A_2, 5.seconds, 3.seconds),
+                        )
+                    )
+                )
+            }
             HorlogeTheme {
                 Surface(
                     modifier = Modifier.fillMaxSize(), color = MaterialTheme.colorScheme.background
@@ -66,6 +70,12 @@ class MainActivity : ComponentActivity() {
                                         rhythms[index] = newRhythm
                                     } else {
                                         rhythms.add(0, newRhythm)
+                                    }
+                                    navController.popBackStack("home", false)
+                                },
+                                onDelete = {
+                                    rhythms.removeIf {
+                                        it.id == rhythmId
                                     }
                                     navController.popBackStack("home", false)
                                 },

@@ -12,8 +12,9 @@ import org.simonolander.horloge.ui.component.RhythmForm
 fun RhythmDestination(
     rhythm: Rhythm?,
     onSave: (Rhythm) -> Unit,
+    onDelete: () -> Unit,
 ) {
     Column(modifier = Modifier.padding(10.dp)) {
-        RhythmForm(rhythm = rhythm, onSave = onSave)
+        RhythmForm(rhythm = rhythm, onSave = onSave, onDelete = onDelete)
     }
 }
