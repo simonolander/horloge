@@ -15,6 +15,7 @@ import androidx.compose.material.icons.filled.Add
 import androidx.compose.material.icons.filled.Check
 import androidx.compose.material.icons.filled.Delete
 import androidx.compose.material.icons.filled.PlayArrow
+import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.Card
 import androidx.compose.material3.DropdownMenuItem
 import androidx.compose.material3.ExposedDropdownMenuBox
@@ -24,6 +25,7 @@ import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
+import androidx.compose.material3.TextButton
 import androidx.compose.material3.TextField
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
@@ -43,9 +45,10 @@ import kotlin.time.Duration.Companion.milliseconds
 import kotlin.time.Duration.Companion.seconds
 
 @Composable
-fun RhythmForm(rhythm: Rhythm?, onSave: (Rhythm) -> Unit) {
+fun RhythmForm(rhythm: Rhythm?, onSave: (Rhythm) -> Unit, onDelete: () -> Unit) {
     var name by remember { mutableStateOf(rhythm?.name ?: "") }
     var beats by remember { mutableStateOf(rhythm?.beats ?: emptyList()) }
+    var showDeleteDialog by remember { mutableStateOf(false) }
 
     Column(
         modifier = Modifier
@@ -55,11 +58,16 @@ fun RhythmForm(rhythm: Rhythm?, onSave: (Rhythm) -> Unit) {
     ) {
         Row(modifier = Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.SpaceBetween) {
             Text(text = "Rhythm", style = MaterialTheme.typography.headlineLarge)
-            IconButton(onClick = {
-                val id = rhythm?.id ?: Rhythm.randomId()
-                onSave(Rhythm(id, name, beats))
-            }) {
-                Icon(imageVector = Icons.Default.Check, contentDescription = "Save rhythm")
+            Row {
+                IconButton(onClick = { showDeleteDialog = true }, enabled = rhythm != null) {
+                    Icon(imageVector = Icons.Default.Delete, contentDescription = "Delete rhythm")
+                }
+                IconButton(onClick = {
+                    val id = rhythm?.id ?: Rhythm.randomId()
+                    onSave(Rhythm(id, name, beats))
+                }) {
+                    Icon(imageVector = Icons.Default.Check, contentDescription = "Save rhythm")
+                }
             }
         }
         TextField(
@@ -70,6 +78,22 @@ fun RhythmForm(rhythm: Rhythm?, onSave: (Rhythm) -> Unit) {
         )
 
         BeatList(beats = beats, onChange = { beats = it })
+    }
+
+    if (showDeleteDialog) {
+        val dismiss = { showDeleteDialog = false }
+        AlertDialog(
+            onDismissRequest = dismiss,
+            confirmButton = {
+                TextButton(onClick = {
+                    onDelete()
+                    dismiss()
+                }) { Text("Delete") }
+            },
+            dismissButton = { TextButton(onClick = dismiss) { Text("Cancel") } },
+            icon = { Icon(imageVector = Icons.Default.Delete, contentDescription = "Dialog icon") },
+            text = { Text(text = "Are you sure that you want to delete the rhythm?") },
+        )
     }
 }
 
@@ -112,8 +136,7 @@ fun BeatView(beat: Beat, onChange: (Beat?) -> Unit) {
     val sounds = Sound.ALL
     Card {
         Column(Modifier.padding(4.dp), verticalArrangement = Arrangement.spacedBy(10.dp)) {
-            TextField(
-                modifier = Modifier.fillMaxWidth(),
+            TextField(modifier = Modifier.fillMaxWidth(),
                 value = beat.period.inWholeMilliseconds.toString(),
                 label = { Text("Period (ms)") },
                 keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number),
@@ -121,8 +144,7 @@ fun BeatView(beat: Beat, onChange: (Beat?) -> Unit) {
                     onChange(beat.copy(period = toLong(it).milliseconds))
                 })
 
-            TextField(
-                modifier = Modifier.fillMaxWidth(),
+            TextField(modifier = Modifier.fillMaxWidth(),
                 value = beat.delay.inWholeMilliseconds.toString(),
                 label = { Text("Delay (ms)") },
                 keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number),
@@ -150,8 +172,7 @@ fun BeatView(beat: Beat, onChange: (Beat?) -> Unit) {
                     onDismissRequest = { expanded = false },
                 ) {
                     sounds.forEach { sound ->
-                        DropdownMenuItem(
-                            text = { Text(sound.name) },
+                        DropdownMenuItem(text = { Text(sound.name) },
                             onClick = {
                                 expanded = false
                                 onChange(beat.copy(sound = sound))
@@ -172,8 +193,7 @@ fun BeatView(beat: Beat, onChange: (Beat?) -> Unit) {
                                         contentDescription = "Listen to beat"
                                     )
                                 }
-                            }
-                        )
+                            })
                     }
                 }
             }
@@ -192,8 +212,7 @@ fun BeatView(beat: Beat, onChange: (Beat?) -> Unit) {
                     }
                 }) {
                     Icon(
-                        imageVector = Icons.Default.PlayArrow,
-                        contentDescription = "Listen to beat"
+                        imageVector = Icons.Default.PlayArrow, contentDescription = "Listen to beat"
                     )
                 }
             }
@@ -209,11 +228,16 @@ private fun toLong(string: String): Long {
 @Composable
 fun RhythmFormPreview() {
     val context = LocalContext.current
+    fun toast(text: String) {
+        Toast.makeText(context, text, Toast.LENGTH_SHORT).show()
+    }
     Surface(Modifier.padding(16.dp)) {
         HorlogeTheme {
-            RhythmForm(null) {
-                Toast.makeText(context, "Saved", Toast.LENGTH_SHORT).show()
-            }
+            RhythmForm(
+                rhythm = null,
+                onSave = { toast("Saved") },
+                onDelete = { toast("Deleted") },
+            )
         }
     }
 }

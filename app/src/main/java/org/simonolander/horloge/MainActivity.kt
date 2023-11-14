@@ -28,12 +28,16 @@ class MainActivity : ComponentActivity() {
         super.onCreate(savedInstanceState)
         setContent {
             val navController = rememberNavController()
-            val rhythms = remember { mutableStateListOf<Rhythm>(
-                Rhythm(Rhythm.randomId(), "Pling plong", listOf(
-                    Beat(Sound.D_2, 4.seconds, 0.seconds),
-                    Beat(Sound.A_2, 5.seconds, 3.seconds),
-                ))
-            ) }
+            val rhythms = remember {
+                mutableStateListOf<Rhythm>(
+                    Rhythm(
+                        Rhythm.randomId(), "Pling plong", listOf(
+                            Beat(Sound.D_2, 4.seconds, 0.seconds),
+                            Beat(Sound.A_2, 5.seconds, 3.seconds),
+                        )
+                    )
+                )
+            }
             HorlogeTheme {
                 Surface(
                     modifier = Modifier.fillMaxSize(), color = MaterialTheme.colorScheme.background
@@ -60,13 +64,20 @@ class MainActivity : ComponentActivity() {
                             val rhythm = rhythms.find { it.id == rhythmId }
                             RhythmDestination(
                                 rhythm = rhythm,
-                                onSave = {
+                                onSave = { newRhythm ->
                                     val index = rhythms.indexOfFirst { it.id == rhythmId }
                                     if (index != -1) {
-                                        rhythms[index] = it
+                                        rhythms[index] = newRhythm
                                     } else {
-                                        rhythms.add(0, it)
+                                        rhythms.add(0, newRhythm)
                                     }
+                                    navController.popBackStack("home", false)
+                                },
+                                onDelete = {
+                                    rhythms.removeIf {
+                                        it.id == rhythmId
+                                    }
+                                    navController.popBackStack("home", false)
                                 },
                             )
                         }

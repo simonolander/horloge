@@ -5,7 +5,9 @@ import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
@@ -62,12 +64,9 @@ fun RhythmList(
 
 @Composable
 fun RhythmView(rhythm: Rhythm, onPlayClick: () -> Unit, onEditClick: () -> Unit) {
-    Card(modifier = Modifier.fillMaxWidth()) {
+    Card(modifier = Modifier.fillMaxWidth(), onClick = onEditClick) {
         Box(Modifier.fillMaxWidth()) {
             Row(modifier = Modifier.align(Alignment.TopEnd)) {
-                IconButton(onClick = onEditClick) {
-                    Icon(imageVector = Icons.Default.Edit, contentDescription = "Edit rhythm")
-                }
                 IconButton(onClick = onPlayClick) {
                     Icon(imageVector = Icons.Default.PlayArrow, contentDescription = "Play rhythm")
                 }
@@ -75,6 +74,9 @@ fun RhythmView(rhythm: Rhythm, onPlayClick: () -> Unit, onEditClick: () -> Unit)
             Column(Modifier.padding(10.dp)) {
                 Text(text = "Name", style = MaterialTheme.typography.labelLarge)
                 Text(text = rhythm.name, style = MaterialTheme.typography.bodyLarge)
+                Spacer(modifier = Modifier.height(10.dp))
+                Text(text = "Beats", style = MaterialTheme.typography.labelLarge)
+                Text(text = rhythm.beats.size.toString(), style = MaterialTheme.typography.bodyLarge)
             }
         }
     }
