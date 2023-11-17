@@ -57,7 +57,7 @@ fun RhythmForm(rhythm: Rhythm?, onSave: (Rhythm) -> Unit, onDelete: () -> Unit) 
         verticalArrangement = Arrangement.spacedBy(10.dp)
     ) {
         Row(modifier = Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.SpaceBetween) {
-            Text(text = "Rhythm", style = MaterialTheme.typography.headlineLarge)
+            Text(text = "Chime", style = MaterialTheme.typography.headlineLarge)
             Row {
                 IconButton(onClick = { showDeleteDialog = true }, enabled = rhythm != null) {
                     Icon(imageVector = Icons.Default.Delete, contentDescription = "Delete rhythm")

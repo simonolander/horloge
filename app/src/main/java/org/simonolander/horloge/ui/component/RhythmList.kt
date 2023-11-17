@@ -44,13 +44,13 @@ fun RhythmList(
         verticalArrangement = Arrangement.spacedBy(10.dp)
     ) {
         Row(modifier = Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.SpaceBetween) {
-            Text(text = "Rhythms", style = MaterialTheme.typography.headlineLarge)
+            Text(text = "Chimes", style = MaterialTheme.typography.headlineLarge)
             IconButton(onClick = { onAddClick() }) {
-                Icon(imageVector = Icons.Default.Add, contentDescription = "Add rhythm")
+                Icon(imageVector = Icons.Default.Add, contentDescription = "Add chime")
             }
         }
         if (rhythms.isEmpty()) {
-            Text(text = "No rhythms", style = MaterialTheme.typography.bodyLarge)
+            Text(text = "No chimes", style = MaterialTheme.typography.bodyLarge)
         }
         for (rhythm in rhythms) {
             RhythmView(
@@ -68,7 +68,7 @@ fun RhythmView(rhythm: Rhythm, onPlayClick: () -> Unit, onEditClick: () -> Unit)
         Box(Modifier.fillMaxWidth()) {
             Row(modifier = Modifier.align(Alignment.TopEnd)) {
                 IconButton(onClick = onPlayClick) {
-                    Icon(imageVector = Icons.Default.PlayArrow, contentDescription = "Play rhythm")
+                    Icon(imageVector = Icons.Default.PlayArrow, contentDescription = "Play chime")
                 }
             }
             Column(Modifier.padding(10.dp)) {
