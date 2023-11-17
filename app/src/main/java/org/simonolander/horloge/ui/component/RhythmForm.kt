@@ -92,7 +92,7 @@ fun RhythmForm(rhythm: Rhythm?, onSave: (Rhythm) -> Unit, onDelete: () -> Unit) 
             },
             dismissButton = { TextButton(onClick = dismiss) { Text("Cancel") } },
             icon = { Icon(imageVector = Icons.Default.Delete, contentDescription = "Dialog icon") },
-            text = { Text(text = "Are you sure that you want to delete the rhythm?") },
+            text = { Text(text = "Are you sure that you want to delete the chime?") },
         )
     }
 }
