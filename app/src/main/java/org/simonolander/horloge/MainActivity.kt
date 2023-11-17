@@ -32,8 +32,8 @@ class MainActivity : ComponentActivity() {
                 mutableStateListOf<Rhythm>(
                     Rhythm(
                         Rhythm.randomId(), "Pling plong", listOf(
-                            Beat(Sound.D_2, 4.seconds, 0.seconds),
-                            Beat(Sound.A_2, 5.seconds, 3.seconds),
+                            Beat(Sound.D_2, 5.seconds, 0.seconds),
+                            Beat(Sound.A_2, 4.seconds, 3.seconds),
                         )
                     )
                 )
