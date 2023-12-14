@@ -13,7 +13,6 @@ import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Add
-import androidx.compose.material.icons.filled.Edit
 import androidx.compose.material.icons.filled.PlayArrow
 import androidx.compose.material3.Card
 import androidx.compose.material3.Icon
@@ -27,15 +26,15 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import org.simonolander.horloge.model.Rhythm
+import org.simonolander.horloge.model.Chime
 import org.simonolander.horloge.ui.theme.HorlogeTheme
 
 @Composable
-fun RhythmList(
-    rhythms: List<Rhythm>,
+fun ChimeList(
+    chimes: List<Chime>,
     onAddClick: () -> Unit,
-    onPlayClick: (Rhythm) -> Unit,
-    onEditClick: (Rhythm) -> Unit
+    onPlayClick: (Chime) -> Unit,
+    onEditClick: (Chime) -> Unit
 ) {
     Column(
         modifier = Modifier
@@ -49,21 +48,21 @@ fun RhythmList(
                 Icon(imageVector = Icons.Default.Add, contentDescription = "Add chime")
             }
         }
-        if (rhythms.isEmpty()) {
+        if (chimes.isEmpty()) {
             Text(text = "No chimes", style = MaterialTheme.typography.bodyLarge)
         }
-        for (rhythm in rhythms) {
-            RhythmView(
-                rhythm = rhythm,
-                onPlayClick = { onPlayClick(rhythm) },
-                onEditClick = { onEditClick(rhythm) },
+        for (chime in chimes) {
+            ChimeView(
+                chime = chime,
+                onPlayClick = { onPlayClick(chime) },
+                onEditClick = { onEditClick(chime) },
             )
         }
     }
 }
 
 @Composable
-fun RhythmView(rhythm: Rhythm, onPlayClick: () -> Unit, onEditClick: () -> Unit) {
+fun ChimeView(chime: Chime, onPlayClick: () -> Unit, onEditClick: () -> Unit) {
     Card(modifier = Modifier.fillMaxWidth(), onClick = onEditClick) {
         Box(Modifier.fillMaxWidth()) {
             Row(modifier = Modifier.align(Alignment.TopEnd)) {
@@ -73,10 +72,10 @@ fun RhythmView(rhythm: Rhythm, onPlayClick: () -> Unit, onEditClick: () -> Unit)
             }
             Column(Modifier.padding(10.dp)) {
                 Text(text = "Name", style = MaterialTheme.typography.labelLarge)
-                Text(text = rhythm.name, style = MaterialTheme.typography.bodyLarge)
+                Text(text = chime.name, style = MaterialTheme.typography.bodyLarge)
                 Spacer(modifier = Modifier.height(10.dp))
                 Text(text = "Beats", style = MaterialTheme.typography.labelLarge)
-                Text(text = rhythm.beats.size.toString(), style = MaterialTheme.typography.bodyLarge)
+                Text(text = chime.beats.size.toString(), style = MaterialTheme.typography.bodyLarge)
             }
         }
     }
@@ -84,19 +83,19 @@ fun RhythmView(rhythm: Rhythm, onPlayClick: () -> Unit, onEditClick: () -> Unit)
 
 @Preview
 @Composable
-fun RhythmListPreview() {
+fun ChimeListPreview() {
     val context = LocalContext.current
-    val rhythms = listOf(
-        Rhythm(
+    val chimes = listOf(
+        Chime(
             id = "550e8400-e29b-41d4-a716-446655440000", name = "Pop and lock", beats = listOf()
         ),
-        Rhythm(
+        Chime(
             id = "123e4567-e89b-12d3-a456-426614174001", name = "Heartbeat", beats = listOf()
         ),
-        Rhythm(
+        Chime(
             id = "7c3d1fba-476f-4f97-8205-9217c7f0ac17", name = "Rainfall", beats = listOf()
         ),
-        Rhythm(
+        Chime(
             id = "f47ac10b-58cc-4372-a567-0e02b2c3d479", name = "Ocean waves", beats = listOf()
         ),
     )
@@ -105,8 +104,8 @@ fun RhythmListPreview() {
     }
     Surface(Modifier.padding(16.dp)) {
         HorlogeTheme {
-            RhythmList(
-                rhythms = rhythms,
+            ChimeList(
+                chimes = chimes,
                 onAddClick = { toast("Add") },
                 onPlayClick = { toast("Play ${it.name}") },
                 onEditClick = { toast("Edit ${it.name}") },

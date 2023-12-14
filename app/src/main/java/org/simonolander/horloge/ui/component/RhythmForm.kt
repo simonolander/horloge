@@ -38,16 +38,16 @@ import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import org.simonolander.horloge.model.Beat
-import org.simonolander.horloge.model.Rhythm
+import org.simonolander.horloge.model.Chime
 import org.simonolander.horloge.model.Sound
 import org.simonolander.horloge.ui.theme.HorlogeTheme
 import kotlin.time.Duration.Companion.milliseconds
 import kotlin.time.Duration.Companion.seconds
 
 @Composable
-fun RhythmForm(rhythm: Rhythm?, onSave: (Rhythm) -> Unit, onDelete: () -> Unit) {
-    var name by remember { mutableStateOf(rhythm?.name ?: "") }
-    var beats by remember { mutableStateOf(rhythm?.beats ?: emptyList()) }
+fun RhythmForm(chime: Chime?, onSave: (Chime) -> Unit, onDelete: () -> Unit) {
+    var name by remember { mutableStateOf(chime?.name ?: "") }
+    var beats by remember { mutableStateOf(chime?.beats ?: emptyList()) }
     var showDeleteDialog by remember { mutableStateOf(false) }
 
     Column(
@@ -59,12 +59,12 @@ fun RhythmForm(rhythm: Rhythm?, onSave: (Rhythm) -> Unit, onDelete: () -> Unit) 
         Row(modifier = Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.SpaceBetween) {
             Text(text = "Chime", style = MaterialTheme.typography.headlineLarge)
             Row {
-                IconButton(onClick = { showDeleteDialog = true }, enabled = rhythm != null) {
+                IconButton(onClick = { showDeleteDialog = true }, enabled = chime != null) {
                     Icon(imageVector = Icons.Default.Delete, contentDescription = "Delete rhythm")
                 }
                 IconButton(onClick = {
-                    val id = rhythm?.id ?: Rhythm.randomId()
-                    onSave(Rhythm(id, name, beats))
+                    val id = chime?.id ?: Chime.randomId()
+                    onSave(Chime(id, name, beats))
                 }) {
                     Icon(imageVector = Icons.Default.Check, contentDescription = "Save rhythm")
                 }
@@ -234,7 +234,7 @@ fun RhythmFormPreview() {
     Surface(Modifier.padding(16.dp)) {
         HorlogeTheme {
             RhythmForm(
-                rhythm = null,
+                chime = null,
                 onSave = { toast("Saved") },
                 onDelete = { toast("Deleted") },
             )

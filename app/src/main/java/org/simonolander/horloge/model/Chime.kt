@@ -2,7 +2,7 @@ package org.simonolander.horloge.model
 
 import java.util.UUID
 
-data class Rhythm(
+data class Chime(
     val id: String,
     val name: String,
     val beats: List<Beat>,

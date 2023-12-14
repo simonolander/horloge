@@ -9,16 +9,16 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
-import org.simonolander.horloge.model.Rhythm
-import org.simonolander.horloge.ui.component.RhythmList
+import org.simonolander.horloge.model.Chime
+import org.simonolander.horloge.ui.component.ChimeList
 
 @Composable
 fun HomeDestination(
-    rhythms: List<Rhythm>,
-    onStartRhythm: (Rhythm) -> Unit,
+    chimes: List<Chime>,
+    onStartRhythm: (Chime) -> Unit,
     onStopRhythm: () -> Unit,
     onAddRhythm: () -> Unit,
-    onEditRhythm: (Rhythm) -> Unit,
+    onEditRhythm: (Chime) -> Unit,
 ) {
     Column(modifier = Modifier.padding(10.dp), verticalArrangement = Arrangement.spacedBy(10.dp)) {
         Button(
@@ -27,8 +27,8 @@ fun HomeDestination(
         ) {
             Text(text = "Stop")
         }
-        RhythmList(
-            rhythms = rhythms,
+        ChimeList(
+            chimes = chimes,
             onAddClick = onAddRhythm,
             onPlayClick = onStartRhythm,
             onEditClick = onEditRhythm

@@ -16,7 +16,7 @@ import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import androidx.navigation.navArgument
 import org.simonolander.horloge.model.Beat
-import org.simonolander.horloge.model.Rhythm
+import org.simonolander.horloge.model.Chime
 import org.simonolander.horloge.model.Sound
 import org.simonolander.horloge.ui.destination.HomeDestination
 import org.simonolander.horloge.ui.destination.RhythmDestination
@@ -28,10 +28,10 @@ class MainActivity : ComponentActivity() {
         super.onCreate(savedInstanceState)
         setContent {
             val navController = rememberNavController()
-            val rhythms = remember {
-                mutableStateListOf<Rhythm>(
-                    Rhythm(
-                        Rhythm.randomId(), "Pling plong", listOf(
+            val chimes = remember {
+                mutableStateListOf(
+                    Chime(
+                        Chime.randomId(), "Pling plong", listOf(
                             Beat(Sound.D_2, 5.seconds, 0.seconds),
                             Beat(Sound.A_2, 4.seconds, 3.seconds),
                         )
@@ -44,38 +44,39 @@ class MainActivity : ComponentActivity() {
                 ) {
                     NavHost(navController = navController, startDestination = "home") {
                         composable("home") {
-                            HomeDestination(rhythms = rhythms,
+                            HomeDestination(
+                                chimes = chimes,
                                 onStartRhythm = { startRhythm(it) },
                                 onStopRhythm = { stopRhythm() },
                                 onAddRhythm = {
-                                    navController.navigate("rhythm/${Rhythm.randomId()}")
+                                    navController.navigate("chime/${Chime.randomId()}")
                                 },
                                 onEditRhythm = {
-                                    navController.navigate("rhythm/${it.id}")
+                                    navController.navigate("chime/${it.id}")
                                 })
                         }
                         composable(
-                            "rhythm/{rhythmId}",
-                            arguments = listOf(navArgument("rhythmId") {
+                            "chime/{chimeId}",
+                            arguments = listOf(navArgument("chimeId") {
                                 type = NavType.StringType
                             }),
                         ) { backStackEntry ->
-                            val rhythmId = backStackEntry.arguments?.getString("rhythmId")
-                            val rhythm = rhythms.find { it.id == rhythmId }
+                            val chimeId = backStackEntry.arguments?.getString("chimeId")
+                            val chime = chimes.find { it.id == chimeId }
                             RhythmDestination(
-                                rhythm = rhythm,
+                                chime = chime,
                                 onSave = { newRhythm ->
-                                    val index = rhythms.indexOfFirst { it.id == rhythmId }
+                                    val index = chimes.indexOfFirst { it.id == chimeId }
                                     if (index != -1) {
-                                        rhythms[index] = newRhythm
+                                        chimes[index] = newRhythm
                                     } else {
-                                        rhythms.add(0, newRhythm)
+                                        chimes.add(0, newRhythm)
                                     }
                                     navController.popBackStack("home", false)
                                 },
                                 onDelete = {
-                                    rhythms.removeIf {
-                                        it.id == rhythmId
+                                    chimes.removeIf {
+                                        it.id == chimeId
                                     }
                                     navController.popBackStack("home", false)
                                 },
@@ -87,10 +88,10 @@ class MainActivity : ComponentActivity() {
         }
     }
 
-    private fun startRhythm(rhythm: Rhythm) {
+    private fun startRhythm(chime: Chime) {
         val intent = Intent(this, HorlogeService::class.java)
         intent.putExtra(
-            HorlogeService.BEATS_KEY, rhythm.beats.toTypedArray()
+            HorlogeService.BEATS_KEY, chime.beats.toTypedArray()
         )
         startForegroundService(intent)
     }
