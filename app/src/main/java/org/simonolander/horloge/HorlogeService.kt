@@ -4,13 +4,17 @@ import android.app.Notification
 import android.app.NotificationChannel
 import android.app.NotificationManager
 import android.app.Service
+import android.content.Context
 import android.content.Intent
 import android.content.pm.ServiceInfo
+import android.graphics.drawable.Icon
 import android.media.MediaPlayer
 import android.os.Build
 import android.os.IBinder
 import android.util.Log
+import androidx.core.app.NotificationCompat
 import org.simonolander.horloge.model.Beat
+import org.simonolander.horloge.model.Chime
 import java.util.Timer
 import kotlin.concurrent.scheduleAtFixedRate
 
@@ -23,49 +27,39 @@ class HorlogeService : Service() {
 
     override fun onStartCommand(intent: Intent, flags: Int, startId: Int): Int {
         Log.i(TAG, "Start command flags=$flags, startId=$startId")
-        startForeground()
-        val beats = getBeats(intent)
-        scheduleBeats(beats)
+        val chime = getChime(intent)
+        startForeground(chime)
+        scheduleChime(chime)
         return START_STICKY
     }
 
-    private fun getBeats(intent: Intent): Array<Beat> {
+    private fun getChime(intent: Intent): Chime {
         return if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
-            intent.getParcelableArrayExtra(BEATS_KEY, Beat::class.java)
-                ?: throw IllegalArgumentException("Missing parcel field '$BEATS_KEY'")
+            intent.getParcelableExtra(CHIME_KEY, Chime::class.java)
         } else {
-            val list = intent.getParcelableArrayExtra(BEATS_KEY)?.toList()
-                ?: throw IllegalArgumentException("Missing parcel field '$BEATS_KEY'")
-            val beats = list.filterIsInstance<Beat>()
-            if (beats.size != list.size) {
-                throw IllegalArgumentException("Parcel field '$BEATS_KEY' contains non-beat elements: $list")
-            }
-            beats.toTypedArray()
-        }
+            intent.getParcelableExtra(CHIME_KEY)
+        } ?: throw IllegalArgumentException("Missing parcel field '$CHIME_KEY'")
     }
 
-    private fun startForeground() {
+    private fun startForeground(chime: Chime) {
         val channel = createNotificationChannel()
-        val notification = createNotification(channel)
+        val notification = createNotification(channel, chime)
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
             startForeground(
-                NOTIFICATION_ID,
-                notification,
-                ServiceInfo.FOREGROUND_SERVICE_TYPE_MEDIA_PLAYBACK
+                NOTIFICATION_ID, notification, ServiceInfo.FOREGROUND_SERVICE_TYPE_MEDIA_PLAYBACK
             )
         } else {
             startForeground(NOTIFICATION_ID, notification)
         }
     }
 
-    private fun scheduleBeats(beats: Array<Beat>) {
+    private fun scheduleChime(chime: Chime) {
         synchronized(this) {
             this.timer?.cancel()
             val timer = Timer()
-            for (beat in beats) {
+            for (beat in chime.beats) {
                 timer.scheduleAtFixedRate(
-                    beat.delay.inWholeMilliseconds,
-                    beat.period.inWholeMilliseconds
+                    beat.delay.inWholeMilliseconds, beat.period.inWholeMilliseconds
                 ) {
                     playBeat(beat)
                 }
@@ -74,8 +68,13 @@ class HorlogeService : Service() {
         }
     }
 
-    private fun createNotification(channel: NotificationChannel) =
-        Notification.Builder(this, channel.id).setContentTitle("Horloge").build()
+    private fun createNotification(channel: NotificationChannel, chime: Chime) =
+        Notification.Builder(this, channel.id)
+            .setSmallIcon(R.mipmap.ic_launcher_round)
+            .setLargeIcon(Icon.createWithResource(this, R.mipmap.ic_launcher_round))
+            .setBadgeIconType(NotificationCompat.BADGE_ICON_NONE)
+            .setContentText("Playing chime ${chime.name}")
+            .build()
 
     private fun createNotificationChannel(): NotificationChannel {
         val channelName = getString(R.string.channel_name_playback)
@@ -112,9 +111,19 @@ class HorlogeService : Service() {
     }
 
     companion object {
-        val TAG = HorlogeService::class.simpleName
-        const val PLAYBACK_CHANNEL_ID = "horloge-playback-channel"
-        const val BEATS_KEY = "beats"
-        const val NOTIFICATION_ID = 1
+        private val TAG = HorlogeService::class.simpleName
+        private const val PLAYBACK_CHANNEL_ID = "horloge-playback-channel"
+        private const val CHIME_KEY = "chime"
+        private const val NOTIFICATION_ID = 1
+
+        fun createStartIntent(context: Context, chime: Chime): Intent {
+            val intent = Intent(context, HorlogeService::class.java)
+            intent.putExtra(CHIME_KEY, chime)
+            return intent
+        }
+
+        fun createStopIntent(context: Context): Intent {
+            return Intent(context, HorlogeService::class.java)
+        }
     }
 }
