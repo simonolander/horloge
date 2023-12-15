@@ -99,7 +99,7 @@ fun ChimeListPreview() {
             id = "f47ac10b-58cc-4372-a567-0e02b2c3d479", name = "Ocean waves", beats = listOf()
         ),
     )
-    Surface(Modifier.padding(16.dp)) {
+    Surface(Modifier.padding(10.dp)) {
         HorlogeTheme {
             ChimeList(
                 chimes = chimes,

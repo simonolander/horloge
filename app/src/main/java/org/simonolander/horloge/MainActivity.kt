@@ -1,6 +1,5 @@
 package org.simonolander.horloge
 
-import android.content.Intent
 import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
@@ -22,6 +21,7 @@ import org.simonolander.horloge.HorlogeService.Companion.createStopIntent
 import org.simonolander.horloge.infrastructure.db.ChimeRepository
 import org.simonolander.horloge.model.Chime
 import org.simonolander.horloge.ui.destination.ChimeDestination
+import org.simonolander.horloge.ui.destination.CreditsDestination
 import org.simonolander.horloge.ui.destination.HomeDestination
 import org.simonolander.horloge.ui.theme.HorlogeTheme
 
@@ -46,6 +46,7 @@ class MainActivity : ComponentActivity() {
                                 onStopChimeClick = ::stopChime,
                                 onAddChimeClick = { navController.navigate("chime/${Chime.randomId()}") },
                                 onEditChimeClick = { navController.navigate("chime/${it.id}") },
+                                onCreditsClick = { navController.navigate("credits") },
                             )
                         }
 
@@ -70,6 +71,10 @@ class MainActivity : ComponentActivity() {
                                     navController.popBackStack("home", false)
                                 },
                             )
+                        }
+
+                        composable("credits") {
+                            CreditsDestination()
                         }
                     }
                 }

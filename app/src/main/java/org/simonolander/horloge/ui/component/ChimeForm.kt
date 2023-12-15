@@ -1,7 +1,6 @@
 package org.simonolander.horloge.ui.component
 
 import android.media.MediaPlayer
-import android.widget.Toast
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -37,10 +36,9 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import org.simonolander.horloge.model.Beat
 import org.simonolander.horloge.model.Chime
-import org.simonolander.horloge.model.Sound
 import org.simonolander.horloge.model.Sounds
 import org.simonolander.horloge.ui.theme.HorlogeTheme
-import java.util.UUID
+import org.simonolander.horloge.util.toaster
 import kotlin.time.Duration.Companion.milliseconds
 import kotlin.time.Duration.Companion.seconds
 
@@ -230,11 +228,8 @@ private fun toLong(string: String): Long {
 @Preview
 @Composable
 fun ChimeFormPreview() {
-    val context = LocalContext.current
-    fun toast(text: String) {
-        Toast.makeText(context, text, Toast.LENGTH_SHORT).show()
-    }
-    Surface(Modifier.padding(16.dp)) {
+    val toast = toaster(LocalContext.current)
+    Surface(Modifier.padding(10.dp)) {
         HorlogeTheme {
             ChimeForm(
                 chime = null,
