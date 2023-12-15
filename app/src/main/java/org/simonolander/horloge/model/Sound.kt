@@ -104,6 +104,9 @@ data class Sound(
             E_4,
         )
 
+        operator fun get(name: String): Sound? {
+            return ALL.find { it.name == name }
+        }
 
         override fun createFromParcel(parcel: Parcel): Sound {
             return Sound(parcel)

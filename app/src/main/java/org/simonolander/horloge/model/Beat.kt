@@ -6,17 +6,20 @@ import kotlin.time.Duration
 import kotlin.time.Duration.Companion.milliseconds
 
 data class Beat(
+    val id: String,
     val sound: Sound,
     val period: Duration,
     val delay: Duration,
 ) : Parcelable {
     constructor(parcel: Parcel) : this(
+        parcel.readString()!!,
         parcel.readParcelable(Sound::class.java.classLoader)!!,
         parcel.readLong().milliseconds,
         parcel.readLong().milliseconds,
     )
 
     override fun writeToParcel(parcel: Parcel, flags: Int) {
+        parcel.writeString(id)
         parcel.writeParcelable(sound, flags)
         parcel.writeLong(period.inWholeMilliseconds)
         parcel.writeLong(delay.inWholeMilliseconds)

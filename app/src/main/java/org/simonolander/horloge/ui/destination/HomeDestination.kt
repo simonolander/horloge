@@ -7,31 +7,42 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.Button
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
+import app.cash.sqldelight.coroutines.asFlow
+import app.cash.sqldelight.coroutines.mapToList
+import kotlinx.coroutines.Dispatchers
+import org.koin.compose.koinInject
+import org.simonolander.horloge.infrastructure.db.chime.ChimeQueries
 import org.simonolander.horloge.model.Chime
 import org.simonolander.horloge.ui.component.ChimeList
 
 @Composable
 fun HomeDestination(
     chimes: List<Chime>,
-    onStartRhythm: (Chime) -> Unit,
-    onStopRhythm: () -> Unit,
-    onAddRhythm: () -> Unit,
-    onEditRhythm: (Chime) -> Unit,
+    onStartChimeClick: (Chime) -> Unit,
+    onStopChimeClick: () -> Unit,
+    onAddChimeClick: () -> Unit,
+    onEditChimeClick: (Chime) -> Unit,
 ) {
-    Column(modifier = Modifier.padding(10.dp), verticalArrangement = Arrangement.spacedBy(10.dp)) {
+    Column(
+        modifier = Modifier.padding(10.dp),
+        verticalArrangement = Arrangement.spacedBy(10.dp),
+    ) {
         Button(
             modifier = Modifier.fillMaxWidth(),
-            onClick = onStopRhythm
+            onClick = onStopChimeClick
         ) {
             Text(text = "Stop")
         }
         ChimeList(
             chimes = chimes,
-            onAddClick = onAddRhythm,
-            onPlayClick = onStartRhythm,
-            onEditClick = onEditRhythm
+            onAddClick = onAddChimeClick,
+            onPlayClick = onStartChimeClick,
+            onEditClick = onEditChimeClick,
         )
     }
 }

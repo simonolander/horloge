@@ -7,9 +7,7 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.text.KeyboardOptions
-import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Add
 import androidx.compose.material.icons.filled.Check
@@ -41,32 +39,30 @@ import org.simonolander.horloge.model.Beat
 import org.simonolander.horloge.model.Chime
 import org.simonolander.horloge.model.Sound
 import org.simonolander.horloge.ui.theme.HorlogeTheme
+import java.util.UUID
 import kotlin.time.Duration.Companion.milliseconds
 import kotlin.time.Duration.Companion.seconds
 
 @Composable
-fun RhythmForm(chime: Chime?, onSave: (Chime) -> Unit, onDelete: () -> Unit) {
+fun ChimeForm(chime: Chime?, onSave: (Chime) -> Unit, onDelete: () -> Unit) {
     var name by remember { mutableStateOf(chime?.name ?: "") }
     var beats by remember { mutableStateOf(chime?.beats ?: emptyList()) }
     var showDeleteDialog by remember { mutableStateOf(false) }
 
     Column(
-        modifier = Modifier
-            .fillMaxWidth()
-            .verticalScroll(rememberScrollState()),
-        verticalArrangement = Arrangement.spacedBy(10.dp)
+        modifier = Modifier.fillMaxWidth(), verticalArrangement = Arrangement.spacedBy(10.dp)
     ) {
         Row(modifier = Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.SpaceBetween) {
             Text(text = "Chime", style = MaterialTheme.typography.headlineLarge)
             Row {
                 IconButton(onClick = { showDeleteDialog = true }, enabled = chime != null) {
-                    Icon(imageVector = Icons.Default.Delete, contentDescription = "Delete rhythm")
+                    Icon(imageVector = Icons.Default.Delete, contentDescription = "Delete chime")
                 }
                 IconButton(onClick = {
                     val id = chime?.id ?: Chime.randomId()
                     onSave(Chime(id, name, beats))
                 }) {
-                    Icon(imageVector = Icons.Default.Check, contentDescription = "Save rhythm")
+                    Icon(imageVector = Icons.Default.Check, contentDescription = "Save chime")
                 }
             }
         }
@@ -104,7 +100,7 @@ fun BeatList(beats: List<Beat>, onChange: (List<Beat>) -> Unit) {
             Text(text = "Beats", style = MaterialTheme.typography.headlineMedium)
             IconButton(onClick = {
                 val list = beats.toMutableList()
-                list.add(0, Beat(Sound.ALL.first(), 10.seconds, 0.seconds))
+                list.add(0, Beat(UUID.randomUUID().toString(), Sound.ALL.first(), 10.seconds, 0.seconds))
                 onChange(list)
             }) {
                 Icon(imageVector = Icons.Default.Add, contentDescription = "Add beat")
@@ -226,14 +222,14 @@ private fun toLong(string: String): Long {
 
 @Preview
 @Composable
-fun RhythmFormPreview() {
+fun ChimeFormPreview() {
     val context = LocalContext.current
     fun toast(text: String) {
         Toast.makeText(context, text, Toast.LENGTH_SHORT).show()
     }
     Surface(Modifier.padding(16.dp)) {
         HorlogeTheme {
-            RhythmForm(
+            ChimeForm(
                 chime = null,
                 onSave = { toast("Saved") },
                 onDelete = { toast("Deleted") },

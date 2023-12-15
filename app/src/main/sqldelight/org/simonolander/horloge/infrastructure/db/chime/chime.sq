@@ -1,0 +1,31 @@
+CREATE TABLE chime (
+    id TEXT PRIMARY KEY NOT NULL,
+    name TEXT NOT NULL
+);
+
+CREATE TABLE beat (
+    id TEXT PRIMARY KEY NOT NULL,
+    chime_id TEXT NOT NULL REFERENCES chime (id) ON DELETE CASCADE,
+    sound_name TEXT NOT NULL,
+    period_ms INTEGER NOT NULL,
+    delay_ms INTEGER NOT NULL
+);
+
+getChimes:
+SELECT * FROM chime;
+
+getChimesWithBeats:
+SELECT * FROM chime JOIN beat ON chime.id = beat.chime_id;
+
+upsertChime:
+REPLACE INTO chime (id, name) VALUES (:id, :name);
+
+deleteChime:
+DELETE FROM chime WHERE id = :id;
+
+upsertBeat:
+REPLACE INTO beat (id, chime_id, sound_name, period_ms, delay_ms)
+VALUES (:id, :chimeId, :soundName, :periodMs, :delayMs);
+
+retainBeatsByIds:
+DELETE FROM beat WHERE chime_id = :chimeId AND id NOT IN :beatIds;

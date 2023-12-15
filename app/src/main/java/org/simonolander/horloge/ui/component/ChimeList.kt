@@ -1,6 +1,5 @@
 package org.simonolander.horloge.ui.component
 
-import android.widget.Toast
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -28,6 +27,7 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import org.simonolander.horloge.model.Chime
 import org.simonolander.horloge.ui.theme.HorlogeTheme
+import org.simonolander.horloge.util.toaster
 
 @Composable
 fun ChimeList(
@@ -84,7 +84,7 @@ fun ChimeView(chime: Chime, onPlayClick: () -> Unit, onEditClick: () -> Unit) {
 @Preview
 @Composable
 fun ChimeListPreview() {
-    val context = LocalContext.current
+    val toast = toaster(LocalContext.current)
     val chimes = listOf(
         Chime(
             id = "550e8400-e29b-41d4-a716-446655440000", name = "Pop and lock", beats = listOf()
@@ -99,9 +99,6 @@ fun ChimeListPreview() {
             id = "f47ac10b-58cc-4372-a567-0e02b2c3d479", name = "Ocean waves", beats = listOf()
         ),
     )
-    val toast = fun(text: String) {
-        Toast.makeText(context, text, Toast.LENGTH_SHORT).show()
-    }
     Surface(Modifier.padding(16.dp)) {
         HorlogeTheme {
             ChimeList(
