@@ -1,5 +1,6 @@
 package org.simonolander.horloge.config
 
+import app.cash.sqldelight.db.SqlDriver
 import app.cash.sqldelight.driver.android.AndroidSqliteDriver
 import org.koin.android.ext.koin.androidContext
 import org.koin.core.module.dsl.singleOf
@@ -14,7 +15,7 @@ private enum class SqlDrivers {
 }
 
 val horlogeModule = module {
-    single(named(SqlDrivers.CHIME)) {
+    single<SqlDriver>(named(SqlDrivers.CHIME)) {
         AndroidSqliteDriver(
             schema = ChimeDatabase.Schema,
             context = androidContext(),

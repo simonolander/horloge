@@ -49,12 +49,16 @@ class ChimeRepository(private val queries: ChimeQueries) {
     }
 
     private fun toBeat(beats: GetChimesWithBeats): Beat? {
-        val sound = Sound[beats.sound_name] ?: return null
+        val id = beats.id_ ?: return null
+        val soundName = beats.sound_name ?: return null
+        val periodMs = beats.period_ms ?: return null
+        val delayMs = beats.delay_ms ?: return null
+        val sound = Sound[soundName] ?: return null
         return Beat(
-            id = beats.id_,
+            id = id,
             sound = sound,
-            period = beats.period_ms.milliseconds,
-            delay = beats.delay_ms.milliseconds,
+            period = periodMs.milliseconds,
+            delay = delayMs.milliseconds,
         )
     }
 }

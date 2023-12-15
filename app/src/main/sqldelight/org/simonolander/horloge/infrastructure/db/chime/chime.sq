@@ -15,7 +15,7 @@ getChimes:
 SELECT * FROM chime;
 
 getChimesWithBeats:
-SELECT * FROM chime JOIN beat ON chime.id = beat.chime_id;
+SELECT * FROM chime LEFT JOIN beat ON chime.id = beat.chime_id;
 
 upsertChime:
 REPLACE INTO chime (id, name) VALUES (:id, :name);
