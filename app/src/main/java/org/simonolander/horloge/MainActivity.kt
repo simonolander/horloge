@@ -17,6 +17,8 @@ import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import androidx.navigation.navArgument
 import org.koin.compose.koinInject
+import org.simonolander.horloge.HorlogeService.Companion.createStartIntent
+import org.simonolander.horloge.HorlogeService.Companion.createStopIntent
 import org.simonolander.horloge.infrastructure.db.ChimeRepository
 import org.simonolander.horloge.model.Chime
 import org.simonolander.horloge.ui.destination.ChimeDestination
@@ -76,14 +78,10 @@ class MainActivity : ComponentActivity() {
     }
 
     private fun startChime(chime: Chime) {
-        val intent = Intent(this, HorlogeService::class.java)
-        intent.putExtra(
-            HorlogeService.BEATS_KEY, chime.beats.toTypedArray()
-        )
-        startForegroundService(intent)
+        startForegroundService(createStartIntent(this, chime))
     }
 
     private fun stopChime() {
-        stopService(Intent(this, HorlogeService::class.java))
+        stopService(createStopIntent(this))
     }
 }

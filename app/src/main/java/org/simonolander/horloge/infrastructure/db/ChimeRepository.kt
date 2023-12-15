@@ -8,6 +8,7 @@ import org.simonolander.horloge.infrastructure.db.chime.GetChimesWithBeats
 import org.simonolander.horloge.model.Beat
 import org.simonolander.horloge.model.Chime
 import org.simonolander.horloge.model.Sound
+import org.simonolander.horloge.model.Sounds
 import kotlin.time.Duration.Companion.milliseconds
 
 class ChimeRepository(private val queries: ChimeQueries) {
@@ -53,7 +54,7 @@ class ChimeRepository(private val queries: ChimeQueries) {
         val soundName = beats.sound_name ?: return null
         val periodMs = beats.period_ms ?: return null
         val delayMs = beats.delay_ms ?: return null
-        val sound = Sound[soundName] ?: return null
+        val sound = Sounds[soundName] ?: return null
         return Beat(
             id = id,
             sound = sound,

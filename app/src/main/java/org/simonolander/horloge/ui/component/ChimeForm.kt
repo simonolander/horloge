@@ -38,6 +38,7 @@ import androidx.compose.ui.unit.dp
 import org.simonolander.horloge.model.Beat
 import org.simonolander.horloge.model.Chime
 import org.simonolander.horloge.model.Sound
+import org.simonolander.horloge.model.Sounds
 import org.simonolander.horloge.ui.theme.HorlogeTheme
 import java.util.UUID
 import kotlin.time.Duration.Companion.milliseconds
@@ -103,7 +104,7 @@ fun BeatList(beats: List<Beat>, onChange: (List<Beat>) -> Unit) {
                 val topBeat = list.firstOrNull()
                 list.add(0, Beat(
                     id = Beat.randomId(),
-                    sound = topBeat?.sound ?: Sound.ALL.first(),
+                    sound = topBeat?.sound ?: Sounds.ALL.first(),
                     period = topBeat?.period ?: 10.seconds,
                     delay = topBeat?.delay ?: 0.seconds,
                 ))
@@ -135,7 +136,7 @@ fun BeatList(beats: List<Beat>, onChange: (List<Beat>) -> Unit) {
 fun BeatView(beat: Beat, onChange: (Beat?) -> Unit) {
     val context = LocalContext.current
     var expanded by remember { mutableStateOf(false) }
-    val sounds = Sound.ALL
+    val sounds = Sounds.ALL
     Card {
         Column(Modifier.padding(4.dp), verticalArrangement = Arrangement.spacedBy(10.dp)) {
             TextField(modifier = Modifier.fillMaxWidth(),
