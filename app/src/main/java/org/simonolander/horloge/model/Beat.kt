@@ -2,6 +2,7 @@ package org.simonolander.horloge.model
 
 import android.os.Parcel
 import android.os.Parcelable
+import java.util.UUID
 import kotlin.time.Duration
 import kotlin.time.Duration.Companion.milliseconds
 
@@ -37,5 +38,7 @@ data class Beat(
         override fun newArray(size: Int): Array<Beat?> {
             return arrayOfNulls(size)
         }
+
+        fun randomId() = UUID.randomUUID().toString()
     }
 }

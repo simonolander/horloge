@@ -100,7 +100,13 @@ fun BeatList(beats: List<Beat>, onChange: (List<Beat>) -> Unit) {
             Text(text = "Beats", style = MaterialTheme.typography.headlineMedium)
             IconButton(onClick = {
                 val list = beats.toMutableList()
-                list.add(0, Beat(UUID.randomUUID().toString(), Sound.ALL.first(), 10.seconds, 0.seconds))
+                val topBeat = list.firstOrNull()
+                list.add(0, Beat(
+                    id = Beat.randomId(),
+                    sound = topBeat?.sound ?: Sound.ALL.first(),
+                    period = topBeat?.period ?: 10.seconds,
+                    delay = topBeat?.delay ?: 0.seconds,
+                ))
                 onChange(list)
             }) {
                 Icon(imageVector = Icons.Default.Add, contentDescription = "Add beat")
