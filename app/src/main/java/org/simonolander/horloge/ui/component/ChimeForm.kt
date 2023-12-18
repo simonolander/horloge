@@ -190,7 +190,6 @@ fun BeatView(
 ) {
     val context = LocalContext.current
     var expanded by remember { mutableStateOf(false) }
-    val sounds = Sounds.ALL
     Card {
         Column(
             modifier = Modifier.padding(4.dp),
@@ -231,34 +230,42 @@ fun BeatView(
                     expanded = expanded,
                     onDismissRequest = { expanded = false },
                 ) {
-                    sounds.forEach { sound ->
-                        DropdownMenuItem(text = { Text(sound.name) },
-                            onClick = {
-                                expanded = false
-                                onChange(beat.copy(sound = sound))
-                            },
-                            contentPadding = ExposedDropdownMenuDefaults.ItemContentPadding,
-                            trailingIcon = {
-                                IconButton(onClick = {
-                                    MediaPlayer.create(
-                                        context,
-                                        sound.resourceId
-                                    )
-                                        .apply {
-                                            setOnCompletionListener {
-                                                reset()
-                                                release()
-                                            }
-                                            start()
+                    Sounds.ALL.groupBy { it.group }
+                        .forEach { (group, sounds) ->
+                            Text(
+                                modifier = Modifier.padding(start = 10.dp),
+                                text = group,
+                                style = MaterialTheme.typography.labelMedium,
+                            )
+                            sounds.forEach { sound ->
+                                DropdownMenuItem(text = { Text(sound.name) },
+                                    onClick = {
+                                        expanded = false
+                                        onChange(beat.copy(sound = sound))
+                                    },
+                                    contentPadding = ExposedDropdownMenuDefaults.ItemContentPadding,
+                                    trailingIcon = {
+                                        IconButton(onClick = {
+                                            MediaPlayer.create(
+                                                context,
+                                                sound.resourceId
+                                            )
+                                                .apply {
+                                                    setOnCompletionListener {
+                                                        reset()
+                                                        release()
+                                                    }
+                                                    start()
+                                                }
+                                        }) {
+                                            Icon(
+                                                imageVector = Icons.Default.PlayArrow,
+                                                contentDescription = "Listen to beat"
+                                            )
                                         }
-                                }) {
-                                    Icon(
-                                        imageVector = Icons.Default.PlayArrow,
-                                        contentDescription = "Listen to beat"
-                                    )
-                                }
-                            })
-                    }
+                                    })
+                            }
+                        }
                 }
             }
 
