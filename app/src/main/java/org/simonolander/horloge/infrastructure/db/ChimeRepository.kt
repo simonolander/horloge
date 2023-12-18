@@ -21,14 +21,15 @@ class ChimeRepository(private val queries: ChimeQueries) {
     fun saveChime(chime: Chime) {
         queries.transaction {
             queries.upsertChime(chime.id, chime.name)
-            chime.beats.forEach {
+            chime.beats.forEachIndexed { index, beat ->
                 queries.upsertBeat(
-                    id = it.id,
+                    id = beat.id,
                     chimeId = chime.id,
-                    soundId = it.sound.id,
-                    periodMs = it.period.inWholeMilliseconds,
-                    delayMs = it.delay.inWholeMilliseconds,
-                    volume = it.volume,
+                    soundId = beat.sound.id,
+                    periodMs = beat.period.inWholeMilliseconds,
+                    delayMs = beat.delay.inWholeMilliseconds,
+                    volume = beat.volume,
+                    ordinal = index.toLong(),
                 )
             }
             queries.retainBeatsByIds(chime.id, chime.beats.map { it.id })
@@ -41,7 +42,9 @@ class ChimeRepository(private val queries: ChimeQueries) {
 
     private fun toChime(chimesWithBeats: List<GetChimesWithBeats>): Chime {
         val first = chimesWithBeats.first()
-        val beats = chimesWithBeats.mapNotNull { toBeat(it) }
+        val beats = chimesWithBeats
+            .sortedBy { it.ordinal }
+            .mapNotNull { toBeat(it) }
         return Chime(
             id = first.id,
             name = first.name,

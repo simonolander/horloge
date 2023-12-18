@@ -2,7 +2,6 @@ package org.simonolander.horloge.model
 
 import android.os.Parcel
 import android.os.Parcelable
-import java.time.Instant
 import java.util.UUID
 import kotlin.time.Duration
 import kotlin.time.Duration.Companion.milliseconds
@@ -19,7 +18,7 @@ data class Beat(
         parcel.readParcelable(Sound::class.java.classLoader)!!,
         parcel.readLong().milliseconds,
         parcel.readLong().milliseconds,
-        parcel.readDouble()
+        parcel.readDouble(),
     )
 
     override fun writeToParcel(parcel: Parcel, flags: Int) {

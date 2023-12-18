@@ -9,7 +9,8 @@ CREATE TABLE beat (
     sound_id TEXT NOT NULL,
     period_ms INTEGER NOT NULL,
     delay_ms INTEGER NOT NULL,
-    volume REAL NOT NULL
+    volume REAL NOT NULL,
+    ordinal INTEGER NOT NULL
 );
 
 getChimes:
@@ -25,8 +26,8 @@ deleteChime:
 DELETE FROM chime WHERE id = :id;
 
 upsertBeat:
-REPLACE INTO beat (id, chime_id, sound_id, period_ms, delay_ms, volume)
-VALUES (:id, :chimeId, :soundId, :periodMs, :delayMs, :volume);
+REPLACE INTO beat (id, chime_id, sound_id, period_ms, delay_ms, volume, ordinal)
+VALUES (:id, :chimeId, :soundId, :periodMs, :delayMs, :volume, :ordinal);
 
 retainBeatsByIds:
 DELETE FROM beat WHERE chime_id = :chimeId AND id NOT IN :beatIds;
