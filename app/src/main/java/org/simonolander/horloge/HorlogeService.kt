@@ -3,7 +3,9 @@ package org.simonolander.horloge
 import android.app.Notification
 import android.app.NotificationChannel
 import android.app.NotificationManager
+import android.app.PendingIntent
 import android.app.Service
+import android.app.TaskStackBuilder
 import android.content.Context
 import android.content.Intent
 import android.content.pm.ServiceInfo
@@ -87,16 +89,18 @@ class HorlogeService : Service() {
         }
     }
 
-    private fun createNotification(
-        channel: NotificationChannel,
-        chime: Chime,
-    ) = Notification.Builder(
-        this,
-        channel.id
-    )
-        .setSmallIcon(R.mipmap.ic_launcher_round)
-        .setContentText("Playing chime ${chime.name}")
-        .build()
+    private fun createNotification(channel: NotificationChannel, chime: Chime): Notification {
+        val intent = Intent(this, MainActivity::class.java)
+        val contentIntent = TaskStackBuilder.create(this).run {
+            addNextIntentWithParentStack(intent)
+            getPendingIntent(0, PendingIntent.FLAG_UPDATE_CURRENT or PendingIntent.FLAG_IMMUTABLE)
+        }
+        return Notification.Builder(this, channel.id)
+            .setSmallIcon(R.mipmap.ic_launcher_round)
+            .setContentText("Playing chime ${chime.name}")
+            .setContentIntent(contentIntent)
+            .build()
+    }
 
     private fun createNotificationChannel(): NotificationChannel {
         val channelName = getString(R.string.channel_name_playback)
