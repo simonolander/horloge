@@ -1,0 +1,148 @@
+Sound pack downloaded from Freesound
+----------------------------------------
+
+"Bells / Gongs"
+
+This pack of sounds contains sounds by the following user:
+ - Benboncan ( https://freesound.org/people/Benboncan/ )
+
+You can find this pack online at: https://freesound.org/people/Benboncan/packs/4023/
+
+
+Licenses in this pack (see below for individual sound licenses)
+---------------------------------------------------------------
+
+Attribution 4.0: https://creativecommons.org/licenses/by/4.0/
+
+
+Sounds in this pack
+-------------------
+
+  * 112197__Benboncan__Gas_Bottle.wav
+    * url: https://freesound.org/s/112197/
+    * license: Attribution 4.0
+  * 106212__Benboncan__Large_Cymbal_Stick.wav
+    * url: https://freesound.org/s/106212/
+    * license: Attribution 4.0
+  * 106211__Benboncan__Large_Cymbal_Felt.wav
+    * url: https://freesound.org/s/106211/
+    * license: Attribution 4.0
+  * 105331__Benboncan__Gurgling_5.1_.wav
+    * url: https://freesound.org/s/105331/
+    * license: Attribution 4.0
+  * 105315__Benboncan__Gurgling_4_.wav
+    * url: https://freesound.org/s/105315/
+    * license: Attribution 4.0
+  * 92987__Benboncan__Clang.wav
+    * url: https://freesound.org/s/92987/
+    * license: Attribution 4.0
+  * 92986__Benboncan__Bowl_With_Water.wav
+    * url: https://freesound.org/s/92986/
+    * license: Attribution 4.0
+  * 92985__Benboncan__Bowl_With_Water_5.wav
+    * url: https://freesound.org/s/92985/
+    * license: Attribution 4.0
+  * 92984__Benboncan__Bowl_With_Water_4.wav
+    * url: https://freesound.org/s/92984/
+    * license: Attribution 4.0
+  * 92983__Benboncan__Bowl_With_Water_3.wav
+    * url: https://freesound.org/s/92983/
+    * license: Attribution 4.0
+  * 92982__Benboncan__Bowl_With_Water_2.wav
+    * url: https://freesound.org/s/92982/
+    * license: Attribution 4.0
+  * 92981__Benboncan__Bowl_With_Water_1.wav
+    * url: https://freesound.org/s/92981/
+    * license: Attribution 4.0
+  * 84771__Benboncan__Brass_Bowl.wav
+    * url: https://freesound.org/s/84771/
+    * license: Attribution 4.0
+  * 80578__Benboncan__Nepalese_Singing_Bowl.wav
+    * url: https://freesound.org/s/80578/
+    * license: Attribution 4.0
+  * 79614__Benboncan__Drips_on_Bowl_2.wav
+    * url: https://freesound.org/s/79614/
+    * license: Attribution 4.0
+  * 79608__Benboncan__Drips_on_Bowl.wav
+    * url: https://freesound.org/s/79608/
+    * license: Attribution 4.0
+  * 77699__Benboncan__Two_Bells_Ship_Time.wav
+    * url: https://freesound.org/s/77699/
+    * license: Attribution 4.0
+  * 77698__Benboncan__Three_Bells_Ship_Time.wav
+    * url: https://freesound.org/s/77698/
+    * license: Attribution 4.0
+  * 77697__Benboncan__Six_Bells_Ship_Time.wav
+    * url: https://freesound.org/s/77697/
+    * license: Attribution 4.0
+  * 77696__Benboncan__Seven_Bells_Ship_Time.wav
+    * url: https://freesound.org/s/77696/
+    * license: Attribution 4.0
+  * 77694__Benboncan__Four_Bells_Ship_Time.wav
+    * url: https://freesound.org/s/77694/
+    * license: Attribution 4.0
+  * 77693__Benboncan__Five_Bells_Ship_Time.wav
+    * url: https://freesound.org/s/77693/
+    * license: Attribution 4.0
+  * 77692__Benboncan__Eight_Bells_Ship_Time.wav
+    * url: https://freesound.org/s/77692/
+    * license: Attribution 4.0
+  * 76925__Benboncan__Bingbong.wav
+    * url: https://freesound.org/s/76925/
+    * license: Attribution 4.0
+  * 75252__Benboncan__Glass_Lid_Revisited.wav
+    * url: https://freesound.org/s/75252/
+    * license: Attribution 4.0
+  * 72890__Benboncan__Steel_Bar.wav
+    * url: https://freesound.org/s/72890/
+    * license: Attribution 4.0
+  * 72757__Benboncan__Fire_Alarm.wav
+    * url: https://freesound.org/s/72757/
+    * license: Attribution 4.0
+  * 69354__Benboncan__Stainless_Steel_Lid_2.wav
+    * url: https://freesound.org/s/69354/
+    * license: Attribution 4.0
+  * 69353__Benboncan__Stainless_Steel_Lid_1.wav
+    * url: https://freesound.org/s/69353/
+    * license: Attribution 4.0
+  * 69352__Benboncan__Stainless_Steel_Bowl.wav
+    * url: https://freesound.org/s/69352/
+    * license: Attribution 4.0
+  * 69351__Benboncan__Stainless_Steel_Bowl_4.wav
+    * url: https://freesound.org/s/69351/
+    * license: Attribution 4.0
+  * 69350__Benboncan__Stainless_Steel_Bowl_3.wav
+    * url: https://freesound.org/s/69350/
+    * license: Attribution 4.0
+  * 69349__Benboncan__Stainless_Steel_Bowl_2.wav
+    * url: https://freesound.org/s/69349/
+    * license: Attribution 4.0
+  * 69348__Benboncan__Stainless_Steel_Bowl_1.wav
+    * url: https://freesound.org/s/69348/
+    * license: Attribution 4.0
+  * 69347__Benboncan__Glass_Lid.wav
+    * url: https://freesound.org/s/69347/
+    * license: Attribution 4.0
+  * 66952__Benboncan__Boxing_Bell_1.wav
+    * url: https://freesound.org/s/66952/
+    * license: Attribution 4.0
+  * 66951__Benboncan__Boxing_Bell.wav
+    * url: https://freesound.org/s/66951/
+    * license: Attribution 4.0
+  * 62860__Benboncan__Bronze_Bell_3.wav
+    * url: https://freesound.org/s/62860/
+    * license: Attribution 4.0
+  * 62588__Benboncan__Steel_Bell.wav
+    * url: https://freesound.org/s/62588/
+    * license: Attribution 4.0
+  * 62587__Benboncan__Bronze_Bell_2.wav
+    * url: https://freesound.org/s/62587/
+    * license: Attribution 4.0
+  * 62586__Benboncan__Bronze_Bell_1.wav
+    * url: https://freesound.org/s/62586/
+    * license: Attribution 4.0
+  * 56929__Benboncan__Bells_Windchime.wav
+    * url: https://freesound.org/s/56929/
+    * license: Attribution 4.0
+
+

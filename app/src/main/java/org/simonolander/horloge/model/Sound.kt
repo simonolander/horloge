@@ -7,4 +7,5 @@ import kotlinx.parcelize.Parcelize
 data class Sound(
     val name: String,
     val resourceId: Int,
+    val group: String,
 ) : Parcelable
