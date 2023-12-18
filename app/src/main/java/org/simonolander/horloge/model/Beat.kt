@@ -2,6 +2,7 @@ package org.simonolander.horloge.model
 
 import android.os.Parcel
 import android.os.Parcelable
+import java.time.Instant
 import java.util.UUID
 import kotlin.time.Duration
 import kotlin.time.Duration.Companion.milliseconds
