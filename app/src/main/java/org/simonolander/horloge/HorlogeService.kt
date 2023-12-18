@@ -95,13 +95,6 @@ class HorlogeService : Service() {
         channel.id
     )
         .setSmallIcon(R.mipmap.ic_launcher_round)
-        .setLargeIcon(
-            Icon.createWithResource(
-                this,
-                R.mipmap.ic_launcher_round
-            )
-        )
-        .setBadgeIconType(NotificationCompat.BADGE_ICON_NONE)
         .setContentText("Playing chime ${chime.name}")
         .build()
 
