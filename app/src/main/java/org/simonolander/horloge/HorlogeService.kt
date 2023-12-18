@@ -25,8 +25,15 @@ class HorlogeService : Service() {
 
     override fun onCreate() {}
 
-    override fun onStartCommand(intent: Intent, flags: Int, startId: Int): Int {
-        Log.i(TAG, "Start command flags=$flags, startId=$startId")
+    override fun onStartCommand(
+        intent: Intent,
+        flags: Int,
+        startId: Int,
+    ): Int {
+        Log.i(
+            TAG,
+            "Start command flags=$flags, startId=$startId"
+        )
         val chime = getChime(intent)
         startForeground(chime)
         scheduleChime(chime)
@@ -35,7 +42,10 @@ class HorlogeService : Service() {
 
     private fun getChime(intent: Intent): Chime {
         return if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
-            intent.getParcelableExtra(CHIME_KEY, Chime::class.java)
+            intent.getParcelableExtra(
+                CHIME_KEY,
+                Chime::class.java
+            )
         } else {
             intent.getParcelableExtra(CHIME_KEY)
         } ?: throw IllegalArgumentException("Missing parcel field '$CHIME_KEY'")
@@ -43,13 +53,21 @@ class HorlogeService : Service() {
 
     private fun startForeground(chime: Chime) {
         val channel = createNotificationChannel()
-        val notification = createNotification(channel, chime)
+        val notification = createNotification(
+            channel,
+            chime
+        )
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
             startForeground(
-                NOTIFICATION_ID, notification, ServiceInfo.FOREGROUND_SERVICE_TYPE_MEDIA_PLAYBACK
+                NOTIFICATION_ID,
+                notification,
+                ServiceInfo.FOREGROUND_SERVICE_TYPE_MEDIA_PLAYBACK
             )
         } else {
-            startForeground(NOTIFICATION_ID, notification)
+            startForeground(
+                NOTIFICATION_ID,
+                notification
+            )
         }
     }
 
@@ -59,7 +77,8 @@ class HorlogeService : Service() {
             val timer = Timer()
             for (beat in chime.beats) {
                 timer.scheduleAtFixedRate(
-                    beat.delay.inWholeMilliseconds, beat.period.inWholeMilliseconds
+                    beat.delay.inWholeMilliseconds,
+                    beat.period.inWholeMilliseconds
                 ) {
                     playBeat(beat)
                 }
@@ -68,18 +87,30 @@ class HorlogeService : Service() {
         }
     }
 
-    private fun createNotification(channel: NotificationChannel, chime: Chime) =
-        Notification.Builder(this, channel.id)
-            .setSmallIcon(R.mipmap.ic_launcher_round)
-            .setLargeIcon(Icon.createWithResource(this, R.mipmap.ic_launcher_round))
-            .setBadgeIconType(NotificationCompat.BADGE_ICON_NONE)
-            .setContentText("Playing chime ${chime.name}")
-            .build()
+    private fun createNotification(
+        channel: NotificationChannel,
+        chime: Chime,
+    ) = Notification.Builder(
+        this,
+        channel.id
+    )
+        .setSmallIcon(R.mipmap.ic_launcher_round)
+        .setLargeIcon(
+            Icon.createWithResource(
+                this,
+                R.mipmap.ic_launcher_round
+            )
+        )
+        .setBadgeIconType(NotificationCompat.BADGE_ICON_NONE)
+        .setContentText("Playing chime ${chime.name}")
+        .build()
 
     private fun createNotificationChannel(): NotificationChannel {
         val channelName = getString(R.string.channel_name_playback)
         val channel = NotificationChannel(
-            PLAYBACK_CHANNEL_ID, channelName, NotificationManager.IMPORTANCE_LOW
+            PLAYBACK_CHANNEL_ID,
+            channelName,
+            NotificationManager.IMPORTANCE_LOW
         ).apply { description = getString(R.string.channel_description_playback) }
         val notificationManager = getSystemService(NOTIFICATION_SERVICE) as NotificationManager
         notificationManager.createNotificationChannel(channel)
@@ -97,17 +128,28 @@ class HorlogeService : Service() {
     }
 
     private fun playBeat(beat: Beat) {
-        MediaPlayer.create(this, beat.sound.resourceId).apply {
-            setOnCompletionListener {
-                it.reset()
-                it.release()
+        MediaPlayer.create(
+            this,
+            beat.sound.resourceId
+        )
+            .apply {
+                setOnCompletionListener {
+                    it.reset()
+                    it.release()
+                }
+                setOnErrorListener { mp, what, extra ->
+                    Log.w(
+                        TAG,
+                        "Received error, exiting: mp=$mp, what=$what, extra=$extra"
+                    )
+                    false
+                }
+                setVolume(
+                    beat.volume.toFloat(),
+                    beat.volume.toFloat()
+                )
+                start()
             }
-            setOnErrorListener { mp, what, extra ->
-                Log.w(TAG, "Received error, exiting: mp=$mp, what=$what, extra=$extra")
-                false
-            }
-            start()
-        }
     }
 
     companion object {
@@ -116,14 +158,26 @@ class HorlogeService : Service() {
         private const val CHIME_KEY = "chime"
         private const val NOTIFICATION_ID = 1
 
-        fun createStartIntent(context: Context, chime: Chime): Intent {
-            val intent = Intent(context, HorlogeService::class.java)
-            intent.putExtra(CHIME_KEY, chime)
+        fun createStartIntent(
+            context: Context,
+            chime: Chime,
+        ): Intent {
+            val intent = Intent(
+                context,
+                HorlogeService::class.java
+            )
+            intent.putExtra(
+                CHIME_KEY,
+                chime
+            )
             return intent
         }
 
         fun createStopIntent(context: Context): Intent {
-            return Intent(context, HorlogeService::class.java)
+            return Intent(
+                context,
+                HorlogeService::class.java
+            )
         }
     }
 }

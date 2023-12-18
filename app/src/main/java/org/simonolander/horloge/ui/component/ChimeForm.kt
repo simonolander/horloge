@@ -20,6 +20,7 @@ import androidx.compose.material3.ExposedDropdownMenuDefaults
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.Slider
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
@@ -39,29 +40,56 @@ import org.simonolander.horloge.model.Chime
 import org.simonolander.horloge.model.Sounds
 import org.simonolander.horloge.ui.theme.HorlogeTheme
 import org.simonolander.horloge.util.toaster
+import kotlin.math.roundToInt
 import kotlin.time.Duration.Companion.milliseconds
 import kotlin.time.Duration.Companion.seconds
 
 @Composable
-fun ChimeForm(chime: Chime?, onSave: (Chime) -> Unit, onDelete: () -> Unit) {
+fun ChimeForm(
+    chime: Chime?,
+    onSave: (Chime) -> Unit,
+    onDelete: () -> Unit,
+) {
     var name by remember { mutableStateOf(chime?.name ?: "") }
     var beats by remember { mutableStateOf(chime?.beats ?: emptyList()) }
     var showDeleteDialog by remember { mutableStateOf(false) }
 
     Column(
-        modifier = Modifier.fillMaxWidth(), verticalArrangement = Arrangement.spacedBy(10.dp)
+        modifier = Modifier.fillMaxWidth(),
+        verticalArrangement = Arrangement.spacedBy(10.dp)
     ) {
-        Row(modifier = Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.SpaceBetween) {
-            Text(text = "Chime", style = MaterialTheme.typography.headlineLarge)
+        Row(
+            modifier = Modifier.fillMaxWidth(),
+            horizontalArrangement = Arrangement.SpaceBetween
+        ) {
+            Text(
+                text = "Chime",
+                style = MaterialTheme.typography.headlineLarge
+            )
             Row {
-                IconButton(onClick = { showDeleteDialog = true }, enabled = chime != null) {
-                    Icon(imageVector = Icons.Default.Delete, contentDescription = "Delete chime")
+                IconButton(
+                    onClick = { showDeleteDialog = true },
+                    enabled = chime != null
+                ) {
+                    Icon(
+                        imageVector = Icons.Default.Delete,
+                        contentDescription = "Delete chime"
+                    )
                 }
                 IconButton(onClick = {
                     val id = chime?.id ?: Chime.randomId()
-                    onSave(Chime(id, name, beats))
+                    onSave(
+                        Chime(
+                            id,
+                            name,
+                            beats
+                        )
+                    )
                 }) {
-                    Icon(imageVector = Icons.Default.Check, contentDescription = "Save chime")
+                    Icon(
+                        imageVector = Icons.Default.Check,
+                        contentDescription = "Save chime"
+                    )
                 }
             }
         }
@@ -72,7 +100,8 @@ fun ChimeForm(chime: Chime?, onSave: (Chime) -> Unit, onDelete: () -> Unit) {
             label = { Text("Name") },
         )
 
-        BeatList(beats = beats, onChange = { beats = it })
+        BeatList(beats = beats,
+            onChange = { beats = it })
     }
 
     if (showDeleteDialog) {
@@ -86,33 +115,57 @@ fun ChimeForm(chime: Chime?, onSave: (Chime) -> Unit, onDelete: () -> Unit) {
                 }) { Text("Delete") }
             },
             dismissButton = { TextButton(onClick = dismiss) { Text("Cancel") } },
-            icon = { Icon(imageVector = Icons.Default.Delete, contentDescription = "Dialog icon") },
+            icon = {
+                Icon(
+                    imageVector = Icons.Default.Delete,
+                    contentDescription = "Dialog icon"
+                )
+            },
             text = { Text(text = "Are you sure that you want to delete the chime?") },
         )
     }
 }
 
 @Composable
-fun BeatList(beats: List<Beat>, onChange: (List<Beat>) -> Unit) {
+fun BeatList(
+    beats: List<Beat>,
+    onChange: (List<Beat>) -> Unit,
+) {
     Column {
-        Row(modifier = Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.SpaceBetween) {
-            Text(text = "Beats", style = MaterialTheme.typography.headlineMedium)
+        Row(
+            modifier = Modifier.fillMaxWidth(),
+            horizontalArrangement = Arrangement.SpaceBetween
+        ) {
+            Text(
+                text = "Beats",
+                style = MaterialTheme.typography.headlineMedium
+            )
             IconButton(onClick = {
                 val list = beats.toMutableList()
                 val topBeat = list.firstOrNull()
-                list.add(0, Beat(
-                    id = Beat.randomId(),
-                    sound = topBeat?.sound ?: Sounds.ALL.first(),
-                    period = topBeat?.period ?: 10.seconds,
-                    delay = topBeat?.delay ?: 0.seconds,
-                ))
+                list.add(
+                    0,
+                    Beat(
+                        id = Beat.randomId(),
+                        sound = topBeat?.sound ?: Sounds.ALL.first(),
+                        period = topBeat?.period ?: 10.seconds,
+                        delay = topBeat?.delay ?: 0.seconds,
+                        volume = topBeat?.volume ?: 1.0,
+                    )
+                )
                 onChange(list)
             }) {
-                Icon(imageVector = Icons.Default.Add, contentDescription = "Add beat")
+                Icon(
+                    imageVector = Icons.Default.Add,
+                    contentDescription = "Add beat"
+                )
             }
         }
         if (beats.isEmpty()) {
-            Text(text = "No beats", style = MaterialTheme.typography.bodyLarge)
+            Text(
+                text = "No beats",
+                style = MaterialTheme.typography.bodyLarge
+            )
         }
         Column(verticalArrangement = Arrangement.spacedBy(10.dp)) {
             for ((index, beat) in beats.withIndex()) {
@@ -131,12 +184,18 @@ fun BeatList(beats: List<Beat>, onChange: (List<Beat>) -> Unit) {
 }
 
 @Composable
-fun BeatView(beat: Beat, onChange: (Beat?) -> Unit) {
+fun BeatView(
+    beat: Beat,
+    onChange: (Beat?) -> Unit,
+) {
     val context = LocalContext.current
     var expanded by remember { mutableStateOf(false) }
     val sounds = Sounds.ALL
     Card {
-        Column(Modifier.padding(4.dp), verticalArrangement = Arrangement.spacedBy(10.dp)) {
+        Column(
+            modifier = Modifier.padding(4.dp),
+            verticalArrangement = Arrangement.spacedBy(10.dp)
+        ) {
             TextField(modifier = Modifier.fillMaxWidth(),
                 value = beat.period.inWholeMilliseconds.toString(),
                 label = { Text("Period (ms)") },
@@ -181,13 +240,17 @@ fun BeatView(beat: Beat, onChange: (Beat?) -> Unit) {
                             contentPadding = ExposedDropdownMenuDefaults.ItemContentPadding,
                             trailingIcon = {
                                 IconButton(onClick = {
-                                    MediaPlayer.create(context, sound.resourceId).apply {
-                                        setOnCompletionListener {
-                                            reset()
-                                            release()
+                                    MediaPlayer.create(
+                                        context,
+                                        sound.resourceId
+                                    )
+                                        .apply {
+                                            setOnCompletionListener {
+                                                reset()
+                                                release()
+                                            }
+                                            start()
                                         }
-                                        start()
-                                    }
                                 }) {
                                     Icon(
                                         imageVector = Icons.Default.PlayArrow,
@@ -199,21 +262,47 @@ fun BeatView(beat: Beat, onChange: (Beat?) -> Unit) {
                 }
             }
 
+            Column {
+                val volumePercent = (beat.volume * 100).roundToInt()
+                Text(
+                    modifier = Modifier.padding(start = 10.dp),
+                    text = "Volume ($volumePercent %)",
+                    style = MaterialTheme.typography.labelLarge
+                )
+                Slider(
+                    value = beat.volume.toFloat(),
+                    onValueChange = { onChange(beat.copy(volume = it.toDouble())) },
+                    valueRange = 0f..1f,
+                )
+            }
+
             Row {
                 IconButton(onClick = { onChange(null) }) {
-                    Icon(imageVector = Icons.Default.Delete, contentDescription = "Delete beat")
+                    Icon(
+                        imageVector = Icons.Default.Delete,
+                        contentDescription = "Delete beat"
+                    )
                 }
                 IconButton(onClick = {
-                    MediaPlayer.create(context, beat.sound.resourceId).apply {
-                        setOnCompletionListener {
-                            reset()
-                            release()
+                    MediaPlayer.create(
+                        context,
+                        beat.sound.resourceId
+                    )
+                        .apply {
+                            setOnCompletionListener {
+                                reset()
+                                release()
+                            }
+                            setVolume(
+                                beat.volume.toFloat(),
+                                beat.volume.toFloat()
+                            )
+                            start()
                         }
-                        start()
-                    }
                 }) {
                     Icon(
-                        imageVector = Icons.Default.PlayArrow, contentDescription = "Listen to beat"
+                        imageVector = Icons.Default.PlayArrow,
+                        contentDescription = "Listen to beat"
                     )
                 }
             }
@@ -222,7 +311,9 @@ fun BeatView(beat: Beat, onChange: (Beat?) -> Unit) {
 }
 
 private fun toLong(string: String): Long {
-    return string.filter { it.isDigit() }.takeIf { it.isNotEmpty() }?.toLong() ?: 0
+    return string.filter { it.isDigit() }
+        .takeIf { it.isNotEmpty() }
+        ?.toLong() ?: 0
 }
 
 @Preview
@@ -232,7 +323,19 @@ fun ChimeFormPreview() {
     Surface(Modifier.padding(10.dp)) {
         HorlogeTheme {
             ChimeForm(
-                chime = null,
+                chime = Chime(
+                    id = "1",
+                    name = "Some chime",
+                    beats = listOf(
+                        Beat(
+                            id = "1",
+                            sound = Sounds.ALL.random(),
+                            period = 1.seconds,
+                            delay = 0.seconds,
+                            volume = 1.0
+                        )
+                    )
+                ),
                 onSave = { toast("Saved") },
                 onDelete = { toast("Deleted") },
             )

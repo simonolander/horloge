@@ -28,6 +28,7 @@ class ChimeRepository(private val queries: ChimeQueries) {
                     soundId = it.sound.id,
                     periodMs = it.period.inWholeMilliseconds,
                     delayMs = it.delay.inWholeMilliseconds,
+                    volume = it.volume,
                 )
             }
             queries.retainBeatsByIds(chime.id, chime.beats.map { it.id })
@@ -53,12 +54,14 @@ class ChimeRepository(private val queries: ChimeQueries) {
         val soundId = beats.sound_id ?: return null
         val periodMs = beats.period_ms ?: return null
         val delayMs = beats.delay_ms ?: return null
+        val volume = beats.volume ?: return null
         val sound = Sounds[soundId] ?: return null
         return Beat(
             id = id,
             sound = sound,
             period = periodMs.milliseconds,
             delay = delayMs.milliseconds,
+            volume = volume,
         )
     }
 }
