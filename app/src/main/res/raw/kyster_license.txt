@@ -135,5 +135,3 @@ Sounds in this pack
   * 117682__Kyster__1_oct_a_.wav
     * url: https://freesound.org/s/117682/
     * license: Attribution 4.0
-
-

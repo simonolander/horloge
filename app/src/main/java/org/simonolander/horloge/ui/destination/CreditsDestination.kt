@@ -58,6 +58,18 @@ fun CreditsDestination() {
                 )
             }
         }
+        Row(Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.SpaceBetween) {
+            Column {
+                Text(text = "Bells and gongs", style = MaterialTheme.typography.labelLarge)
+                Text(text = "Benboncan", style = MaterialTheme.typography.bodyLarge)
+            }
+            IconButton(onClick = { uriHandler.openUri("https://freesound.org/people/Benboncan/packs/4023") }) {
+                Icon(
+                    imageVector = Icons.Default.ExitToApp,
+                    contentDescription = "Navigate to website"
+                )
+            }
+        }
     }
 }
 

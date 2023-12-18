@@ -7,7 +7,6 @@ import org.simonolander.horloge.infrastructure.db.chime.ChimeQueries
 import org.simonolander.horloge.infrastructure.db.chime.GetChimesWithBeats
 import org.simonolander.horloge.model.Beat
 import org.simonolander.horloge.model.Chime
-import org.simonolander.horloge.model.Sound
 import org.simonolander.horloge.model.Sounds
 import kotlin.time.Duration.Companion.milliseconds
 
@@ -22,13 +21,15 @@ class ChimeRepository(private val queries: ChimeQueries) {
     fun saveChime(chime: Chime) {
         queries.transaction {
             queries.upsertChime(chime.id, chime.name)
-            chime.beats.forEach {
+            chime.beats.forEachIndexed { index, beat ->
                 queries.upsertBeat(
-                    id = it.id,
+                    id = beat.id,
                     chimeId = chime.id,
-                    soundName = it.sound.name,
-                    periodMs = it.period.inWholeMilliseconds,
-                    delayMs = it.delay.inWholeMilliseconds,
+                    soundId = beat.sound.id,
+                    periodMs = beat.period.inWholeMilliseconds,
+                    delayMs = beat.delay.inWholeMilliseconds,
+                    volume = beat.volume,
+                    ordinal = index.toLong(),
                 )
             }
             queries.retainBeatsByIds(chime.id, chime.beats.map { it.id })
@@ -41,7 +42,9 @@ class ChimeRepository(private val queries: ChimeQueries) {
 
     private fun toChime(chimesWithBeats: List<GetChimesWithBeats>): Chime {
         val first = chimesWithBeats.first()
-        val beats = chimesWithBeats.mapNotNull { toBeat(it) }
+        val beats = chimesWithBeats
+            .sortedBy { it.ordinal }
+            .mapNotNull { toBeat(it) }
         return Chime(
             id = first.id,
             name = first.name,
@@ -51,15 +54,17 @@ class ChimeRepository(private val queries: ChimeQueries) {
 
     private fun toBeat(beats: GetChimesWithBeats): Beat? {
         val id = beats.id_ ?: return null
-        val soundName = beats.sound_name ?: return null
+        val soundId = beats.sound_id ?: return null
         val periodMs = beats.period_ms ?: return null
         val delayMs = beats.delay_ms ?: return null
-        val sound = Sounds[soundName] ?: return null
+        val volume = beats.volume ?: return null
+        val sound = Sounds[soundId] ?: return null
         return Beat(
             id = id,
             sound = sound,
             period = periodMs.milliseconds,
             delay = delayMs.milliseconds,
+            volume = volume,
         )
     }
 }

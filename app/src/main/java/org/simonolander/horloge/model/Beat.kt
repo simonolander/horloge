@@ -11,12 +11,14 @@ data class Beat(
     val sound: Sound,
     val period: Duration,
     val delay: Duration,
+    val volume: Double,
 ) : Parcelable {
     constructor(parcel: Parcel) : this(
         parcel.readString()!!,
         parcel.readParcelable(Sound::class.java.classLoader)!!,
         parcel.readLong().milliseconds,
         parcel.readLong().milliseconds,
+        parcel.readDouble(),
     )
 
     override fun writeToParcel(parcel: Parcel, flags: Int) {
@@ -24,6 +26,7 @@ data class Beat(
         parcel.writeParcelable(sound, flags)
         parcel.writeLong(period.inWholeMilliseconds)
         parcel.writeLong(delay.inWholeMilliseconds)
+        parcel.writeDouble(volume)
     }
 
     override fun describeContents(): Int {
