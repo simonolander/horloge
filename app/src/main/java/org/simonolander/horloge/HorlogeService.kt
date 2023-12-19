@@ -9,14 +9,13 @@ import android.app.TaskStackBuilder
 import android.content.Context
 import android.content.Intent
 import android.content.pm.ServiceInfo
-import android.graphics.drawable.Icon
 import android.media.MediaPlayer
 import android.os.Build
 import android.os.IBinder
 import android.util.Log
-import androidx.core.app.NotificationCompat
 import org.simonolander.horloge.model.Beat
 import org.simonolander.horloge.model.Chime
+import org.simonolander.horloge.ui.theme.HorlogeOrange
 import java.util.Timer
 import kotlin.concurrent.scheduleAtFixedRate
 
@@ -36,9 +35,13 @@ class HorlogeService : Service() {
             TAG,
             "Start command flags=$flags, startId=$startId"
         )
-        val chime = getChime(intent)
-        startForeground(chime)
-        scheduleChime(chime)
+        if (intent.action == INTENT_ACTION_STOP) {
+            stop()
+        } else {
+            val chime = getChime(intent)
+            startForeground(chime)
+            scheduleChime(chime)
+        }
         return START_STICKY
     }
 
@@ -95,10 +98,28 @@ class HorlogeService : Service() {
             addNextIntentWithParentStack(intent)
             getPendingIntent(0, PendingIntent.FLAG_UPDATE_CURRENT or PendingIntent.FLAG_IMMUTABLE)
         }
+        val action = Notification.Action.Builder(
+            android.R.drawable.ic_media_pause,
+            "Stop",
+            PendingIntent.getForegroundService(
+                this,
+                0,
+                createStopIntent(this),
+                PendingIntent.FLAG_CANCEL_CURRENT or PendingIntent.FLAG_IMMUTABLE,
+            ),
+        )
+            .run {
+                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.P) {
+                    setSemanticAction(Notification.Action.SEMANTIC_ACTION_DELETE)
+                }
+                build()
+            }
         return Notification.Builder(this, channel.id)
-            .setSmallIcon(R.mipmap.ic_launcher_round)
-            .setContentText("Playing chime ${chime.name}")
+            .setSmallIcon(R.mipmap.ic_launcher_no_background)
+            .setColor(HorlogeOrange.value.toInt())
+            .setContentTitle("Chiming ${chime.name}")
             .setContentIntent(contentIntent)
+            .addAction(action)
             .build()
     }
 
@@ -119,9 +140,14 @@ class HorlogeService : Service() {
     }
 
     override fun onDestroy() {
+        stop()
+    }
+
+    private fun stop() {
         synchronized(this) {
             timer?.cancel()
         }
+        stopSelf()
     }
 
     private fun playBeat(beat: Beat) {
@@ -154,27 +180,18 @@ class HorlogeService : Service() {
         private const val PLAYBACK_CHANNEL_ID = "horloge-playback-channel"
         private const val CHIME_KEY = "chime"
         private const val NOTIFICATION_ID = 1
+        private const val INTENT_ACTION_STOP = "stop"
 
-        fun createStartIntent(
-            context: Context,
-            chime: Chime,
-        ): Intent {
-            val intent = Intent(
-                context,
-                HorlogeService::class.java
-            )
-            intent.putExtra(
-                CHIME_KEY,
-                chime
-            )
+        fun createStartIntent(context: Context, chime: Chime): Intent {
+            val intent = Intent(context, HorlogeService::class.java)
+            intent.putExtra(CHIME_KEY, chime)
             return intent
         }
 
         fun createStopIntent(context: Context): Intent {
-            return Intent(
-                context,
-                HorlogeService::class.java
-            )
+            val intent = Intent(context, HorlogeService::class.java)
+            intent.action = INTENT_ACTION_STOP
+            return intent
         }
     }
 }
