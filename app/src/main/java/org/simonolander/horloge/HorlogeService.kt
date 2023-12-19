@@ -15,7 +15,6 @@ import android.os.IBinder
 import android.util.Log
 import org.simonolander.horloge.model.Beat
 import org.simonolander.horloge.model.Chime
-import org.simonolander.horloge.ui.theme.HorlogeOrange
 import java.util.Timer
 import kotlin.concurrent.scheduleAtFixedRate
 
@@ -116,8 +115,8 @@ class HorlogeService : Service() {
             }
         return Notification.Builder(this, channel.id)
             .setSmallIcon(R.mipmap.ic_launcher_no_background)
-            .setColor(HorlogeOrange.value.toInt())
-            .setContentTitle("Chiming ${chime.name}")
+            .setColor(resources.getColor(R.color.orange_horloge))
+            .setContentTitle("Playing chime ${chime.name}")
             .setContentIntent(contentIntent)
             .addAction(action)
             .build()
