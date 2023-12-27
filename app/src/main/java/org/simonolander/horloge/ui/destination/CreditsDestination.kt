@@ -9,6 +9,7 @@ import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ExitToApp
+import androidx.compose.material3.Divider
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
@@ -32,6 +33,7 @@ fun CreditsDestination() {
         verticalArrangement = Arrangement.spacedBy(10.dp),
     ) {
         Text(text = "Credits", style = MaterialTheme.typography.headlineLarge)
+        Divider()
         Text(text = "Application", style = MaterialTheme.typography.headlineSmall)
         Row(Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.SpaceBetween) {
             Column {
@@ -45,6 +47,7 @@ fun CreditsDestination() {
                 )
             }
         }
+        Divider()
         Text(text = "Music and sounds", style = MaterialTheme.typography.headlineSmall)
         Row(Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.SpaceBetween) {
             Column {
