@@ -83,6 +83,9 @@ sqldelight {
     databases {
         create("ChimeDatabase") {
             packageName.set("org.simonolander.horloge.infrastructure.db.chime")
+            schemaOutputDirectory.set(file("${rootDir}/app/src/main/sqldelight/org/simonolander/horloge/infrastructure/db/chime/schema"))
+            migrationOutputDirectory.set(file("${rootDir}/app/src/main/sqldelight/org/simonolander/horloge/infrastructure/db/chime/migrations"))
+            verifyMigrations.set(true)
         }
     }
 }
