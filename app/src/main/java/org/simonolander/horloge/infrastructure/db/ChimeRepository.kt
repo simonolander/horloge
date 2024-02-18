@@ -20,7 +20,7 @@ class ChimeRepository(private val queries: ChimeQueries) {
 
     fun saveChime(chime: Chime) {
         queries.transaction {
-            queries.upsertChime(chime.id, chime.name)
+            queries.upsertChime(chime.id, chime.name, chime.volume)
             chime.beats.forEachIndexed { index, beat ->
                 queries.upsertBeat(
                     id = beat.id,
@@ -49,6 +49,7 @@ class ChimeRepository(private val queries: ChimeQueries) {
             id = first.id,
             name = first.name,
             beats = beats,
+            volume = first.volume,
         )
     }
 
@@ -57,7 +58,7 @@ class ChimeRepository(private val queries: ChimeQueries) {
         val soundId = beats.sound_id ?: return null
         val periodMs = beats.period_ms ?: return null
         val delayMs = beats.delay_ms ?: return null
-        val volume = beats.volume ?: return null
+        val volume = beats.volume_ ?: return null
         val sound = Sounds[soundId] ?: return null
         return Beat(
             id = id,

@@ -52,6 +52,7 @@ fun ChimeForm(
 ) {
     var name by remember { mutableStateOf(chime?.name ?: "") }
     var beats by remember { mutableStateOf(chime?.beats ?: emptyList()) }
+    var volume by remember { mutableStateOf(chime?.volume ?: 1.0) }
     var showDeleteDialog by remember { mutableStateOf(false) }
 
     Column(
@@ -82,7 +83,8 @@ fun ChimeForm(
                         Chime(
                             id,
                             name,
-                            beats
+                            beats,
+                            volume,
                         )
                     )
                 }) {
@@ -99,6 +101,20 @@ fun ChimeForm(
             onValueChange = { name = it },
             label = { Text("Name") },
         )
+
+        Column {
+            val volumePercent = (volume * 100).roundToInt()
+            Text(
+                modifier = Modifier.padding(start = 10.dp),
+                text = "Volume ($volumePercent %)",
+                style = MaterialTheme.typography.labelLarge
+            )
+            Slider(
+                value = volume.toFloat(),
+                onValueChange = { volume = it.toDouble() },
+                valueRange = 0f..1f,
+            )
+        }
 
         BeatList(beats = beats,
             onChange = { beats = it })
@@ -341,7 +357,8 @@ fun ChimeFormPreview() {
                             delay = 0.seconds,
                             volume = 1.0
                         )
-                    )
+                    ),
+                    volume = 0.8
                 ),
                 onSave = { toast("Saved") },
                 onDelete = { toast("Deleted") },

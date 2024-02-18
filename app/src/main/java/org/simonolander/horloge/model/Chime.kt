@@ -9,6 +9,7 @@ data class Chime(
     val id: String,
     val name: String,
     val beats: List<Beat>,
+    val volume: Double,
 ) : Parcelable {
     companion object {
         fun randomId() = UUID.randomUUID().toString()
