@@ -1,6 +1,7 @@
 CREATE TABLE chime (
     id TEXT PRIMARY KEY NOT NULL,
-    name TEXT NOT NULL
+    name TEXT NOT NULL,
+    volume REAL NOT NULL DEFAULT 1
 );
 
 CREATE TABLE beat (
@@ -20,7 +21,7 @@ getChimesWithBeats:
 SELECT * FROM chime LEFT JOIN beat ON chime.id = beat.chime_id;
 
 upsertChime:
-REPLACE INTO chime (id, name) VALUES (:id, :name);
+REPLACE INTO chime (id, name, volume) VALUES (:id, :name, :volume);
 
 deleteChime:
 DELETE FROM chime WHERE id = :id;

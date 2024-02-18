@@ -84,7 +84,7 @@ class HorlogeService : Service() {
                     beat.delay.inWholeMilliseconds,
                     beat.period.inWholeMilliseconds
                 ) {
-                    playBeat(beat)
+                    playBeat(beat.copy(volume = beat.volume * chime.volume))
                 }
             }
             this.timer = timer

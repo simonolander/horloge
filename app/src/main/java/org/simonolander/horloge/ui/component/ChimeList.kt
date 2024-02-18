@@ -87,16 +87,16 @@ fun ChimeListPreview() {
     val toast = toaster(LocalContext.current)
     val chimes = listOf(
         Chime(
-            id = "550e8400-e29b-41d4-a716-446655440000", name = "Pop and lock", beats = listOf()
+            id = "550e8400-e29b-41d4-a716-446655440000", name = "Pop and lock", beats = listOf(), 0.2
         ),
         Chime(
-            id = "123e4567-e89b-12d3-a456-426614174001", name = "Heartbeat", beats = listOf()
+            id = "123e4567-e89b-12d3-a456-426614174001", name = "Heartbeat", beats = listOf(), 0.8
         ),
         Chime(
-            id = "7c3d1fba-476f-4f97-8205-9217c7f0ac17", name = "Rainfall", beats = listOf()
+            id = "7c3d1fba-476f-4f97-8205-9217c7f0ac17", name = "Rainfall", beats = listOf(), 1.0
         ),
         Chime(
-            id = "f47ac10b-58cc-4372-a567-0e02b2c3d479", name = "Ocean waves", beats = listOf()
+            id = "f47ac10b-58cc-4372-a567-0e02b2c3d479", name = "Ocean waves", beats = listOf(), 0.0
         ),
     )
     Surface(Modifier.padding(10.dp)) {
