@@ -23,6 +23,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.text.font.FontStyle
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import org.simonolander.horloge.model.Chime
@@ -34,13 +35,14 @@ fun ChimeList(
     chimes: List<Chime>,
     onAddClick: () -> Unit,
     onPlayClick: (Chime) -> Unit,
-    onEditClick: (Chime) -> Unit
+    onEditClick: (Chime) -> Unit,
 ) {
     Column(
-        modifier = Modifier
-            .fillMaxWidth()
-            .verticalScroll(rememberScrollState()),
-        verticalArrangement = Arrangement.spacedBy(10.dp)
+        modifier =
+            Modifier
+                .fillMaxWidth()
+                .verticalScroll(rememberScrollState()),
+        verticalArrangement = Arrangement.spacedBy(10.dp),
     ) {
         Row(modifier = Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.SpaceBetween) {
             Text(text = "Chimes", style = MaterialTheme.typography.headlineLarge)
@@ -62,7 +64,11 @@ fun ChimeList(
 }
 
 @Composable
-fun ChimeView(chime: Chime, onPlayClick: () -> Unit, onEditClick: () -> Unit) {
+fun ChimeView(
+    chime: Chime,
+    onPlayClick: () -> Unit,
+    onEditClick: () -> Unit,
+) {
     Card(modifier = Modifier.fillMaxWidth(), onClick = onEditClick) {
         Box(Modifier.fillMaxWidth()) {
             Row(modifier = Modifier.align(Alignment.TopEnd)) {
@@ -72,7 +78,11 @@ fun ChimeView(chime: Chime, onPlayClick: () -> Unit, onEditClick: () -> Unit) {
             }
             Column(Modifier.padding(10.dp)) {
                 Text(text = "Name", style = MaterialTheme.typography.labelLarge)
-                Text(text = chime.name, style = MaterialTheme.typography.bodyLarge)
+                if (chime.name.isNotEmpty()) {
+                    Text(text = chime.name, style = MaterialTheme.typography.bodyLarge)
+                } else {
+                    Text(text = "No name", style = MaterialTheme.typography.bodyLarge, fontStyle = FontStyle.Italic)
+                }
                 Spacer(modifier = Modifier.height(10.dp))
                 Text(text = "Beats", style = MaterialTheme.typography.labelLarge)
                 Text(text = chime.beats.size.toString(), style = MaterialTheme.typography.bodyLarge)
@@ -85,20 +95,39 @@ fun ChimeView(chime: Chime, onPlayClick: () -> Unit, onEditClick: () -> Unit) {
 @Composable
 fun ChimeListPreview() {
     val toast = toaster(LocalContext.current)
-    val chimes = listOf(
-        Chime(
-            id = "550e8400-e29b-41d4-a716-446655440000", name = "Pop and lock", beats = listOf(), 0.2
-        ),
-        Chime(
-            id = "123e4567-e89b-12d3-a456-426614174001", name = "Heartbeat", beats = listOf(), 0.8
-        ),
-        Chime(
-            id = "7c3d1fba-476f-4f97-8205-9217c7f0ac17", name = "Rainfall", beats = listOf(), 1.0
-        ),
-        Chime(
-            id = "f47ac10b-58cc-4372-a567-0e02b2c3d479", name = "Ocean waves", beats = listOf(), 0.0
-        ),
-    )
+    val chimes =
+        listOf(
+            Chime(
+                id = "550e8400-e29b-41d4-a716-446655440000",
+                name = "Pop and lock",
+                beats = listOf(),
+                0.2,
+            ),
+            Chime(
+                id = "123e4567-e89b-12d3-a456-426614174001",
+                name = "Heartbeat",
+                beats = listOf(),
+                0.8,
+            ),
+            Chime(
+                id = "7c3d1fba-476f-4f97-8205-9217c7f0ac17",
+                name = "Rainfall",
+                beats = listOf(),
+                1.0,
+            ),
+            Chime(
+                id = "f47ac10b-58cc-4372-a567-0e02b2c3d479",
+                name = "Ocean waves",
+                beats = listOf(),
+                0.0,
+            ),
+            Chime(
+                id = "80852832-691a-4c8b-9e56-11d4ffd8aae6",
+                name = "",
+                beats = listOf(),
+                0.0,
+            ),
+        )
     Surface(Modifier.padding(10.dp)) {
         HorlogeTheme {
             ChimeList(
