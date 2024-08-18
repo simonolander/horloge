@@ -10,13 +10,18 @@ import org.simonolander.horloge.model.Chime
 import org.simonolander.horloge.model.Sounds
 import kotlin.time.Duration.Companion.milliseconds
 
-class ChimeRepository(private val queries: ChimeQueries) {
-
-    fun getChimes(): Flow<List<Chime>> {
-        return queries.getChimesWithBeats().asFlow().map { query ->
-            query.executeAsList().groupBy { it.id }.map { it.value }.map { toChime(it) }
+class ChimeRepository(
+    private val queries: ChimeQueries,
+) {
+    fun getChimes(): Flow<List<Chime>> =
+        queries.getChimesWithBeats().asFlow().map { query ->
+            query
+                .executeAsList()
+                .groupBy { it.id }
+                .map { it.value }
+                .map { toChime(it) }
+                .sortedBy { it.name }
         }
-    }
 
     fun saveChime(chime: Chime) {
         queries.transaction {
@@ -42,9 +47,10 @@ class ChimeRepository(private val queries: ChimeQueries) {
 
     private fun toChime(chimesWithBeats: List<GetChimesWithBeats>): Chime {
         val first = chimesWithBeats.first()
-        val beats = chimesWithBeats
-            .sortedBy { it.ordinal }
-            .mapNotNull { toBeat(it) }
+        val beats =
+            chimesWithBeats
+                .sortedBy { it.ordinal }
+                .mapNotNull { toBeat(it) }
         return Chime(
             id = first.id,
             name = first.name,
@@ -69,4 +75,3 @@ class ChimeRepository(private val queries: ChimeQueries) {
         )
     }
 }
-
