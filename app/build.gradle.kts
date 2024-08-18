@@ -13,8 +13,8 @@ android {
         applicationId = "org.simonolander.horloge"
         minSdk = 26
         targetSdk = 34
-        versionCode = 2
-        versionName = "2.0"
+        versionCode = 3
+        versionName = "3.0"
 
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
         vectorDrawables {
@@ -27,7 +27,7 @@ android {
             isMinifyEnabled = false
             proguardFiles(
                 getDefaultProguardFile("proguard-android-optimize.txt"),
-                "proguard-rules.pro"
+                "proguard-rules.pro",
             )
         }
     }
@@ -83,8 +83,10 @@ sqldelight {
     databases {
         create("ChimeDatabase") {
             packageName.set("org.simonolander.horloge.infrastructure.db.chime")
-            schemaOutputDirectory.set(file("${rootDir}/app/src/main/sqldelight/org/simonolander/horloge/infrastructure/db/chime/schema"))
-            migrationOutputDirectory.set(file("${rootDir}/app/src/main/sqldelight/org/simonolander/horloge/infrastructure/db/chime/migrations"))
+            schemaOutputDirectory.set(file("$rootDir/app/src/main/sqldelight/org/simonolander/horloge/infrastructure/db/chime/schema"))
+            migrationOutputDirectory.set(
+                file("$rootDir/app/src/main/sqldelight/org/simonolander/horloge/infrastructure/db/chime/migrations"),
+            )
             verifyMigrations.set(true)
         }
     }
