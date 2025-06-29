@@ -1,8 +1,8 @@
 plugins {
-    id("com.android.application")
-    id("org.jetbrains.kotlin.android")
     id("app.cash.sqldelight")
+    id("com.android.application")
     id("kotlin-parcelize")
+    id("org.jetbrains.kotlin.android")
 }
 
 android {
