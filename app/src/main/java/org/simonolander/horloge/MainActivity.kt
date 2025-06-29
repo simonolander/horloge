@@ -3,8 +3,9 @@ package org.simonolander.horloge
 import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
-import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Surface
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
@@ -35,49 +36,50 @@ class MainActivity : ComponentActivity() {
             val chimes by chimeFlow.collectAsState(initial = emptyList())
             HorlogeTheme {
                 Surface(
-                    modifier = Modifier.fillMaxSize(),
                     color = MaterialTheme.colorScheme.background,
                 ) {
-                    NavHost(navController = navController, startDestination = "home") {
-                        composable("home") {
-                            HomeDestination(
-                                chimes = chimes,
-                                onStartChimeClick = ::startChime,
-                                onStopChimeClick = ::stopChime,
-                                onAddChimeClick = { navController.navigate("chime/${Chime.randomId()}") },
-                                onEditChimeClick = { navController.navigate("chime/${it.id}") },
-                                onCreditsClick = { navController.navigate("credits") },
-                            )
-                        }
+                    Scaffold { paddingValues ->
+                        NavHost(modifier = Modifier.padding(paddingValues), navController = navController, startDestination = "home") {
+                            composable("home") {
+                                HomeDestination(
+                                    chimes = chimes,
+                                    onStartChimeClick = ::startChime,
+                                    onStopChimeClick = ::stopChime,
+                                    onAddChimeClick = { navController.navigate("chime/${Chime.randomId()}") },
+                                    onEditChimeClick = { navController.navigate("chime/${it.id}") },
+                                    onCreditsClick = { navController.navigate("credits") },
+                                )
+                            }
 
-                        composable(
-                            "chime/{chimeId}",
-                            arguments =
-                                listOf(
-                                    navArgument("chimeId") {
-                                        type = NavType.StringType
+                            composable(
+                                "chime/{chimeId}",
+                                arguments =
+                                    listOf(
+                                        navArgument("chimeId") {
+                                            type = NavType.StringType
+                                        },
+                                    ),
+                            ) { backStackEntry ->
+                                val chimeId = backStackEntry.arguments?.getString("chimeId")
+                                val chime = chimes.find { it.id == chimeId }
+                                ChimeDestination(
+                                    chime = chime,
+                                    onSave = { newChime ->
+                                        repository.saveChime(newChime)
+                                        navController.popBackStack("home", false)
                                     },
-                                ),
-                        ) { backStackEntry ->
-                            val chimeId = backStackEntry.arguments?.getString("chimeId")
-                            val chime = chimes.find { it.id == chimeId }
-                            ChimeDestination(
-                                chime = chime,
-                                onSave = { newChime ->
-                                    repository.saveChime(newChime)
-                                    navController.popBackStack("home", false)
-                                },
-                                onDelete = {
-                                    if (chimeId != null) {
-                                        repository.deleteChime(chimeId)
-                                    }
-                                    navController.popBackStack("home", false)
-                                },
-                            )
-                        }
+                                    onDelete = {
+                                        if (chimeId != null) {
+                                            repository.deleteChime(chimeId)
+                                        }
+                                        navController.popBackStack("home", false)
+                                    },
+                                )
+                            }
 
-                        composable("credits") {
-                            CreditsDestination()
+                            composable("credits") {
+                                CreditsDestination()
+                            }
                         }
                     }
                 }
