@@ -9,6 +9,7 @@ import android.app.TaskStackBuilder
 import android.content.Context
 import android.content.Intent
 import android.content.pm.ServiceInfo
+import android.graphics.drawable.Icon
 import android.media.MediaPlayer
 import android.os.Build
 import android.os.IBinder
@@ -51,6 +52,7 @@ class HorlogeService : Service() {
                 Chime::class.java
             )
         } else {
+            @Suppress("DEPRECATION")
             intent.getParcelableExtra(CHIME_KEY)
         } ?: throw IllegalArgumentException("Missing parcel field '$CHIME_KEY'")
     }
@@ -97,8 +99,9 @@ class HorlogeService : Service() {
             addNextIntentWithParentStack(intent)
             getPendingIntent(0, PendingIntent.FLAG_UPDATE_CURRENT or PendingIntent.FLAG_IMMUTABLE)
         }
+        val icon = Icon.createWithResource(applicationContext, android.R.drawable.ic_media_pause)
         val action = Notification.Action.Builder(
-            android.R.drawable.ic_media_pause,
+            icon,
             "Stop",
             PendingIntent.getForegroundService(
                 this,
@@ -115,7 +118,7 @@ class HorlogeService : Service() {
             }
         return Notification.Builder(this, channel.id)
             .setSmallIcon(R.mipmap.ic_launcher_no_background)
-            .setColor(resources.getColor(R.color.orange_horloge))
+            .setColor(resources.getColor(R.color.orange_horloge, null))
             .setContentTitle("Playing chime ${chime.name}")
             .setContentIntent(contentIntent)
             .addAction(action)

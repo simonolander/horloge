@@ -1,5 +1,6 @@
 package org.simonolander.horloge.model
 
+import android.os.Build
 import android.os.Parcel
 import android.os.Parcelable
 import java.util.UUID
@@ -15,7 +16,15 @@ data class Beat(
 ) : Parcelable {
     constructor(parcel: Parcel) : this(
         parcel.readString()!!,
-        parcel.readParcelable(Sound::class.java.classLoader)!!,
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
+            parcel.readParcelable(
+                Sound::class.java.classLoader,
+                Sound::class.java,
+            )!!
+        } else {
+            @Suppress("DEPRECATION")
+            parcel.readParcelable(Sound::class.java.classLoader)!!
+        },
         parcel.readLong().milliseconds,
         parcel.readLong().milliseconds,
         parcel.readDouble(),
