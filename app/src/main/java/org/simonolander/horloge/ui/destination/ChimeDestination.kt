@@ -17,9 +17,10 @@ fun ChimeDestination(
     onDelete: () -> Unit,
 ) {
     Column(
-        modifier = Modifier
-            .padding(10.dp)
-            .verticalScroll(rememberScrollState())
+        modifier =
+            Modifier
+                .padding(10.dp)
+                .verticalScroll(rememberScrollState()),
     ) {
         ChimeForm(chime = chime, onSave = onSave, onDelete = onDelete)
     }

@@ -35,10 +35,10 @@ class MainActivity : ComponentActivity() {
             val chimes by chimeFlow.collectAsState(initial = emptyList())
             HorlogeTheme {
                 Surface(
-                    modifier = Modifier.fillMaxSize(), color = MaterialTheme.colorScheme.background
+                    modifier = Modifier.fillMaxSize(),
+                    color = MaterialTheme.colorScheme.background,
                 ) {
                     NavHost(navController = navController, startDestination = "home") {
-
                         composable("home") {
                             HomeDestination(
                                 chimes = chimes,
@@ -52,9 +52,12 @@ class MainActivity : ComponentActivity() {
 
                         composable(
                             "chime/{chimeId}",
-                            arguments = listOf(navArgument("chimeId") {
-                                type = NavType.StringType
-                            }),
+                            arguments =
+                                listOf(
+                                    navArgument("chimeId") {
+                                        type = NavType.StringType
+                                    },
+                                ),
                         ) { backStackEntry ->
                             val chimeId = backStackEntry.arguments?.getString("chimeId")
                             val chime = chimes.find { it.id == chimeId }

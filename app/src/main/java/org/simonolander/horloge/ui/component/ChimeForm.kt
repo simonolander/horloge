@@ -57,24 +57,24 @@ fun ChimeForm(
 
     Column(
         modifier = Modifier.fillMaxWidth(),
-        verticalArrangement = Arrangement.spacedBy(10.dp)
+        verticalArrangement = Arrangement.spacedBy(10.dp),
     ) {
         Row(
             modifier = Modifier.fillMaxWidth(),
-            horizontalArrangement = Arrangement.SpaceBetween
+            horizontalArrangement = Arrangement.SpaceBetween,
         ) {
             Text(
                 text = "Chime",
-                style = MaterialTheme.typography.headlineLarge
+                style = MaterialTheme.typography.headlineLarge,
             )
             Row {
                 IconButton(
                     onClick = { showDeleteDialog = true },
-                    enabled = chime != null
+                    enabled = chime != null,
                 ) {
                     Icon(
                         imageVector = Icons.Default.Delete,
-                        contentDescription = "Delete chime"
+                        contentDescription = "Delete chime",
                     )
                 }
                 IconButton(onClick = {
@@ -85,12 +85,12 @@ fun ChimeForm(
                             name,
                             beats,
                             volume,
-                        )
+                        ),
                     )
                 }) {
                     Icon(
                         imageVector = Icons.Default.Check,
-                        contentDescription = "Save chime"
+                        contentDescription = "Save chime",
                     )
                 }
             }
@@ -107,7 +107,7 @@ fun ChimeForm(
             Text(
                 modifier = Modifier.padding(start = 10.dp),
                 text = "Volume ($volumePercent %)",
-                style = MaterialTheme.typography.labelLarge
+                style = MaterialTheme.typography.labelLarge,
             )
             Slider(
                 value = volume.toFloat(),
@@ -116,8 +116,10 @@ fun ChimeForm(
             )
         }
 
-        BeatList(beats = beats,
-            onChange = { beats = it })
+        BeatList(
+            beats = beats,
+            onChange = { beats = it },
+        )
     }
 
     if (showDeleteDialog) {
@@ -134,7 +136,7 @@ fun ChimeForm(
             icon = {
                 Icon(
                     imageVector = Icons.Default.Delete,
-                    contentDescription = "Dialog icon"
+                    contentDescription = "Dialog icon",
                 )
             },
             text = { Text(text = "Are you sure that you want to delete the chime?") },
@@ -150,11 +152,11 @@ fun BeatList(
     Column {
         Row(
             modifier = Modifier.fillMaxWidth(),
-            horizontalArrangement = Arrangement.SpaceBetween
+            horizontalArrangement = Arrangement.SpaceBetween,
         ) {
             Text(
                 text = "Beats",
-                style = MaterialTheme.typography.headlineMedium
+                style = MaterialTheme.typography.headlineMedium,
             )
             IconButton(onClick = {
                 val list = beats.toMutableList()
@@ -167,20 +169,20 @@ fun BeatList(
                         period = topBeat?.period ?: 10.seconds,
                         delay = topBeat?.delay ?: 0.seconds,
                         volume = topBeat?.volume ?: 1.0,
-                    )
+                    ),
                 )
                 onChange(list)
             }) {
                 Icon(
                     imageVector = Icons.Default.Add,
-                    contentDescription = "Add beat"
+                    contentDescription = "Add beat",
                 )
             }
         }
         if (beats.isEmpty()) {
             Text(
                 text = "No beats",
-                style = MaterialTheme.typography.bodyLarge
+                style = MaterialTheme.typography.bodyLarge,
             )
         }
         Column(verticalArrangement = Arrangement.spacedBy(10.dp)) {
@@ -209,32 +211,37 @@ fun BeatView(
     Card {
         Column(
             modifier = Modifier.padding(4.dp),
-            verticalArrangement = Arrangement.spacedBy(10.dp)
+            verticalArrangement = Arrangement.spacedBy(10.dp),
         ) {
-            TextField(modifier = Modifier.fillMaxWidth(),
+            TextField(
+                modifier = Modifier.fillMaxWidth(),
                 value = beat.period.inWholeMilliseconds.toString(),
                 label = { Text("Period (ms)") },
                 keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number),
                 onValueChange = {
                     onChange(beat.copy(period = toLong(it).milliseconds))
-                })
+                },
+            )
 
-            TextField(modifier = Modifier.fillMaxWidth(),
+            TextField(
+                modifier = Modifier.fillMaxWidth(),
                 value = beat.delay.inWholeMilliseconds.toString(),
                 label = { Text("Delay (ms)") },
                 keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number),
                 onValueChange = {
                     onChange(beat.copy(delay = toLong(it).milliseconds))
-                })
+                },
+            )
 
             ExposedDropdownMenuBox(
                 expanded = expanded,
                 onExpandedChange = { expanded = it },
             ) {
                 TextField(
-                    modifier = Modifier
-                        .menuAnchor()
-                        .fillMaxWidth(),
+                    modifier =
+                        Modifier
+                            .menuAnchor()
+                            .fillMaxWidth(),
                     readOnly = true,
                     value = beat.sound.name,
                     onValueChange = {},
@@ -246,7 +253,8 @@ fun BeatView(
                     expanded = expanded,
                     onDismissRequest = { expanded = false },
                 ) {
-                    Sounds.ALL.groupBy { it.group }
+                    Sounds.ALL
+                        .groupBy { it.group }
                         .forEach { (group, sounds) ->
                             Text(
                                 modifier = Modifier.padding(start = 10.dp),
@@ -254,7 +262,8 @@ fun BeatView(
                                 style = MaterialTheme.typography.labelMedium,
                             )
                             sounds.forEach { sound ->
-                                DropdownMenuItem(text = { Text(sound.name) },
+                                DropdownMenuItem(
+                                    text = { Text(sound.name) },
                                     onClick = {
                                         expanded = false
                                         onChange(beat.copy(sound = sound))
@@ -262,11 +271,11 @@ fun BeatView(
                                     contentPadding = ExposedDropdownMenuDefaults.ItemContentPadding,
                                     trailingIcon = {
                                         IconButton(onClick = {
-                                            MediaPlayer.create(
-                                                context,
-                                                sound.resourceId
-                                            )
-                                                .apply {
+                                            MediaPlayer
+                                                .create(
+                                                    context,
+                                                    sound.resourceId,
+                                                ).apply {
                                                     setOnCompletionListener {
                                                         reset()
                                                         release()
@@ -276,10 +285,11 @@ fun BeatView(
                                         }) {
                                             Icon(
                                                 imageVector = Icons.Default.PlayArrow,
-                                                contentDescription = "Listen to beat"
+                                                contentDescription = "Listen to beat",
                                             )
                                         }
-                                    })
+                                    },
+                                )
                             }
                         }
                 }
@@ -290,7 +300,7 @@ fun BeatView(
                 Text(
                     modifier = Modifier.padding(start = 10.dp),
                     text = "Volume ($volumePercent %)",
-                    style = MaterialTheme.typography.labelLarge
+                    style = MaterialTheme.typography.labelLarge,
                 )
                 Slider(
                     value = beat.volume.toFloat(),
@@ -303,29 +313,29 @@ fun BeatView(
                 IconButton(onClick = { onChange(null) }) {
                     Icon(
                         imageVector = Icons.Default.Delete,
-                        contentDescription = "Delete beat"
+                        contentDescription = "Delete beat",
                     )
                 }
                 IconButton(onClick = {
-                    MediaPlayer.create(
-                        context,
-                        beat.sound.resourceId
-                    )
-                        .apply {
+                    MediaPlayer
+                        .create(
+                            context,
+                            beat.sound.resourceId,
+                        ).apply {
                             setOnCompletionListener {
                                 reset()
                                 release()
                             }
                             setVolume(
                                 beat.volume.toFloat(),
-                                beat.volume.toFloat()
+                                beat.volume.toFloat(),
                             )
                             start()
                         }
                 }) {
                     Icon(
                         imageVector = Icons.Default.PlayArrow,
-                        contentDescription = "Listen to beat"
+                        contentDescription = "Listen to beat",
                     )
                 }
             }
@@ -333,11 +343,11 @@ fun BeatView(
     }
 }
 
-private fun toLong(string: String): Long {
-    return string.filter { it.isDigit() }
+private fun toLong(string: String): Long =
+    string
+        .filter { it.isDigit() }
         .takeIf { it.isNotEmpty() }
         ?.toLong() ?: 0
-}
 
 @Preview
 @Composable
@@ -346,20 +356,22 @@ fun ChimeFormPreview() {
     Surface(Modifier.padding(10.dp)) {
         HorlogeTheme {
             ChimeForm(
-                chime = Chime(
-                    id = "1",
-                    name = "Some chime",
-                    beats = listOf(
-                        Beat(
-                            id = "1",
-                            sound = Sounds.ALL.random(),
-                            period = 1.seconds,
-                            delay = 0.seconds,
-                            volume = 1.0
-                        )
+                chime =
+                    Chime(
+                        id = "1",
+                        name = "Some chime",
+                        beats =
+                            listOf(
+                                Beat(
+                                    id = "1",
+                                    sound = Sounds.ALL.random(),
+                                    period = 1.seconds,
+                                    delay = 0.seconds,
+                                    volume = 1.0,
+                                ),
+                            ),
+                        volume = 0.8,
                     ),
-                    volume = 0.8
-                ),
                 onSave = { toast("Saved") },
                 onDelete = { toast("Deleted") },
             )

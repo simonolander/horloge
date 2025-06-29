@@ -30,7 +30,10 @@ data class Beat(
         parcel.readDouble(),
     )
 
-    override fun writeToParcel(parcel: Parcel, flags: Int) {
+    override fun writeToParcel(
+        parcel: Parcel,
+        flags: Int,
+    ) {
         parcel.writeString(id)
         parcel.writeParcelable(sound, flags)
         parcel.writeLong(period.inWholeMilliseconds)
@@ -38,18 +41,12 @@ data class Beat(
         parcel.writeDouble(volume)
     }
 
-    override fun describeContents(): Int {
-        return 0
-    }
+    override fun describeContents(): Int = 0
 
     companion object CREATOR : Parcelable.Creator<Beat> {
-        override fun createFromParcel(parcel: Parcel): Beat {
-            return Beat(parcel)
-        }
+        override fun createFromParcel(parcel: Parcel): Beat = Beat(parcel)
 
-        override fun newArray(size: Int): Array<Beat?> {
-            return arrayOfNulls(size)
-        }
+        override fun newArray(size: Int): Array<Beat?> = arrayOfNulls(size)
 
         fun randomId() = UUID.randomUUID().toString()
     }

@@ -7,7 +7,6 @@ import org.koin.core.context.startKoin
 import org.simonolander.horloge.config.horlogeModule
 
 class MainApplication : Application() {
-
     override fun onCreate() {
         super.onCreate()
 

@@ -26,10 +26,11 @@ import org.simonolander.horloge.ui.theme.HorlogeTheme
 fun CreditsDestination() {
     val uriHandler = LocalUriHandler.current
     Column(
-        modifier = Modifier
-            .fillMaxWidth()
-            .padding(10.dp)
-            .verticalScroll(rememberScrollState()),
+        modifier =
+            Modifier
+                .fillMaxWidth()
+                .padding(10.dp)
+                .verticalScroll(rememberScrollState()),
         verticalArrangement = Arrangement.spacedBy(10.dp),
     ) {
         Text(text = "Credits", style = MaterialTheme.typography.headlineLarge)
@@ -43,7 +44,7 @@ fun CreditsDestination() {
             IconButton(onClick = { uriHandler.openUri("https://www.simonolander.com") }) {
                 Icon(
                     imageVector = Icons.Default.ExitToApp,
-                    contentDescription = "Navigate to website"
+                    contentDescription = "Navigate to website",
                 )
             }
         }
@@ -57,7 +58,7 @@ fun CreditsDestination() {
             IconButton(onClick = { uriHandler.openUri("https://freesound.org/people/Kyster/packs/7398") }) {
                 Icon(
                     imageVector = Icons.Default.ExitToApp,
-                    contentDescription = "Navigate to website"
+                    contentDescription = "Navigate to website",
                 )
             }
         }
@@ -69,7 +70,7 @@ fun CreditsDestination() {
             IconButton(onClick = { uriHandler.openUri("https://freesound.org/people/Benboncan/packs/4023") }) {
                 Icon(
                     imageVector = Icons.Default.ExitToApp,
-                    contentDescription = "Navigate to website"
+                    contentDescription = "Navigate to website",
                 )
             }
         }

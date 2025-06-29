@@ -19,9 +19,7 @@ import org.simonolander.horloge.model.Chime
 import java.util.Timer
 import kotlin.concurrent.scheduleAtFixedRate
 
-
 class HorlogeService : Service() {
-
     private var timer: Timer? = null
 
     override fun onCreate() {}
@@ -33,7 +31,7 @@ class HorlogeService : Service() {
     ): Int {
         Log.i(
             TAG,
-            "Start command flags=$flags, startId=$startId"
+            "Start command flags=$flags, startId=$startId",
         )
         if (intent.action == INTENT_ACTION_STOP) {
             stop()
@@ -45,34 +43,34 @@ class HorlogeService : Service() {
         return START_STICKY
     }
 
-    private fun getChime(intent: Intent): Chime {
-        return if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
+    private fun getChime(intent: Intent): Chime =
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
             intent.getParcelableExtra(
                 CHIME_KEY,
-                Chime::class.java
+                Chime::class.java,
             )
         } else {
             @Suppress("DEPRECATION")
             intent.getParcelableExtra(CHIME_KEY)
         } ?: throw IllegalArgumentException("Missing parcel field '$CHIME_KEY'")
-    }
 
     private fun startForeground(chime: Chime) {
         val channel = createNotificationChannel()
-        val notification = createNotification(
-            channel,
-            chime
-        )
+        val notification =
+            createNotification(
+                channel,
+                chime,
+            )
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
             startForeground(
                 NOTIFICATION_ID,
                 notification,
-                ServiceInfo.FOREGROUND_SERVICE_TYPE_MEDIA_PLAYBACK
+                ServiceInfo.FOREGROUND_SERVICE_TYPE_MEDIA_PLAYBACK,
             )
         } else {
             startForeground(
                 NOTIFICATION_ID,
-                notification
+                notification,
             )
         }
     }
@@ -84,7 +82,7 @@ class HorlogeService : Service() {
             for (beat in chime.beats) {
                 timer.scheduleAtFixedRate(
                     beat.delay.inWholeMilliseconds,
-                    beat.period.inWholeMilliseconds
+                    beat.period.inWholeMilliseconds,
                 ) {
                     playBeat(beat.copy(volume = beat.volume * chime.volume))
                 }
@@ -93,30 +91,36 @@ class HorlogeService : Service() {
         }
     }
 
-    private fun createNotification(channel: NotificationChannel, chime: Chime): Notification {
+    private fun createNotification(
+        channel: NotificationChannel,
+        chime: Chime,
+    ): Notification {
         val intent = Intent(this, MainActivity::class.java)
-        val contentIntent = TaskStackBuilder.create(this).run {
-            addNextIntentWithParentStack(intent)
-            getPendingIntent(0, PendingIntent.FLAG_UPDATE_CURRENT or PendingIntent.FLAG_IMMUTABLE)
-        }
-        val icon = Icon.createWithResource(applicationContext, android.R.drawable.ic_media_pause)
-        val action = Notification.Action.Builder(
-            icon,
-            "Stop",
-            PendingIntent.getForegroundService(
-                this,
-                0,
-                createStopIntent(this),
-                PendingIntent.FLAG_CANCEL_CURRENT or PendingIntent.FLAG_IMMUTABLE,
-            ),
-        )
-            .run {
-                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.P) {
-                    setSemanticAction(Notification.Action.SEMANTIC_ACTION_DELETE)
-                }
-                build()
+        val contentIntent =
+            TaskStackBuilder.create(this).run {
+                addNextIntentWithParentStack(intent)
+                getPendingIntent(0, PendingIntent.FLAG_UPDATE_CURRENT or PendingIntent.FLAG_IMMUTABLE)
             }
-        return Notification.Builder(this, channel.id)
+        val icon = Icon.createWithResource(applicationContext, android.R.drawable.ic_media_pause)
+        val action =
+            Notification.Action
+                .Builder(
+                    icon,
+                    "Stop",
+                    PendingIntent.getForegroundService(
+                        this,
+                        0,
+                        createStopIntent(this),
+                        PendingIntent.FLAG_CANCEL_CURRENT or PendingIntent.FLAG_IMMUTABLE,
+                    ),
+                ).run {
+                    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.P) {
+                        setSemanticAction(Notification.Action.SEMANTIC_ACTION_DELETE)
+                    }
+                    build()
+                }
+        return Notification
+            .Builder(this, channel.id)
             .setSmallIcon(R.mipmap.ic_launcher_no_background)
             .setColor(resources.getColor(R.color.orange_horloge, null))
             .setContentTitle("Playing chime ${chime.name}")
@@ -127,19 +131,18 @@ class HorlogeService : Service() {
 
     private fun createNotificationChannel(): NotificationChannel {
         val channelName = getString(R.string.channel_name_playback)
-        val channel = NotificationChannel(
-            PLAYBACK_CHANNEL_ID,
-            channelName,
-            NotificationManager.IMPORTANCE_LOW
-        ).apply { description = getString(R.string.channel_description_playback) }
+        val channel =
+            NotificationChannel(
+                PLAYBACK_CHANNEL_ID,
+                channelName,
+                NotificationManager.IMPORTANCE_LOW,
+            ).apply { description = getString(R.string.channel_description_playback) }
         val notificationManager = getSystemService(NOTIFICATION_SERVICE) as NotificationManager
         notificationManager.createNotificationChannel(channel)
         return channel
     }
 
-    override fun onBind(intent: Intent): IBinder? {
-        return null
-    }
+    override fun onBind(intent: Intent): IBinder? = null
 
     override fun onDestroy() {
         stop()
@@ -153,11 +156,11 @@ class HorlogeService : Service() {
     }
 
     private fun playBeat(beat: Beat) {
-        MediaPlayer.create(
-            this,
-            beat.sound.resourceId
-        )
-            .apply {
+        MediaPlayer
+            .create(
+                this,
+                beat.sound.resourceId,
+            ).apply {
                 setOnCompletionListener {
                     it.reset()
                     it.release()
@@ -165,13 +168,13 @@ class HorlogeService : Service() {
                 setOnErrorListener { mp, what, extra ->
                     Log.w(
                         TAG,
-                        "Received error, exiting: mp=$mp, what=$what, extra=$extra"
+                        "Received error, exiting: mp=$mp, what=$what, extra=$extra",
                     )
                     false
                 }
                 setVolume(
                     beat.volume.toFloat(),
-                    beat.volume.toFloat()
+                    beat.volume.toFloat(),
                 )
                 start()
             }
@@ -184,7 +187,10 @@ class HorlogeService : Service() {
         private const val NOTIFICATION_ID = 1
         private const val INTENT_ACTION_STOP = "stop"
 
-        fun createStartIntent(context: Context, chime: Chime): Intent {
+        fun createStartIntent(
+            context: Context,
+            chime: Chime,
+        ): Intent {
             val intent = Intent(context, HorlogeService::class.java)
             intent.putExtra(CHIME_KEY, chime)
             return intent

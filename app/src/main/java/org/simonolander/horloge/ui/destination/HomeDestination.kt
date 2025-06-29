@@ -8,12 +8,10 @@ import androidx.compose.material3.Button
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import org.simonolander.horloge.infrastructure.db.chime.ChimeQueries
 import org.simonolander.horloge.model.Chime
 import org.simonolander.horloge.ui.component.ChimeList
 import org.simonolander.horloge.ui.theme.HorlogeTheme
@@ -34,7 +32,7 @@ fun HomeDestination(
     ) {
         Button(
             modifier = Modifier.fillMaxWidth(),
-            onClick = onStopChimeClick
+            onClick = onStopChimeClick,
         ) {
             Text(text = "Stop")
         }
@@ -58,11 +56,11 @@ fun HomeDestinationPreview() {
         HorlogeTheme {
             HomeDestination(
                 chimes = emptyList(),
-                onStartChimeClick = {toast("Start chime")},
-                onStopChimeClick = {toast("Stop chime")},
-                onAddChimeClick = {toast("Add chime")},
-                onEditChimeClick = {toast("Edit chime")},
-                onCreditsClick = {toast("Credits")},
+                onStartChimeClick = { toast("Start chime") },
+                onStopChimeClick = { toast("Stop chime") },
+                onAddChimeClick = { toast("Add chime") },
+                onEditChimeClick = { toast("Edit chime") },
+                onCreditsClick = { toast("Credits") },
             )
         }
     }

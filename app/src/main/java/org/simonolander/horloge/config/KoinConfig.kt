@@ -11,22 +11,23 @@ import org.simonolander.horloge.infrastructure.db.chime.ChimeDatabase
 import org.simonolander.horloge.infrastructure.db.chime.ChimeQueries
 
 private enum class SqlDrivers {
-    CHIME
+    CHIME,
 }
 
-val horlogeModule = module {
-    single<SqlDriver>(named(SqlDrivers.CHIME)) {
-        AndroidSqliteDriver(
-            schema = ChimeDatabase.Schema,
-            context = androidContext(),
-            name = "chime.db",
-            callback = SqlDelightConfig(ChimeDatabase.Schema)
-        )
-    }
+val horlogeModule =
+    module {
+        single<SqlDriver>(named(SqlDrivers.CHIME)) {
+            AndroidSqliteDriver(
+                schema = ChimeDatabase.Schema,
+                context = androidContext(),
+                name = "chime.db",
+                callback = SqlDelightConfig(ChimeDatabase.Schema),
+            )
+        }
 
-    single {
-        ChimeQueries(get(named(SqlDrivers.CHIME)))
-    }
+        single {
+            ChimeQueries(get(named(SqlDrivers.CHIME)))
+        }
 
-    singleOf(::ChimeRepository)
-}
+        singleOf(::ChimeRepository)
+    }
