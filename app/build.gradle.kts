@@ -7,12 +7,12 @@ plugins {
 
 android {
     namespace = "org.simonolander.horloge"
-    compileSdk = 34
+    compileSdk = 36
 
     defaultConfig {
         applicationId = "org.simonolander.horloge"
         minSdk = 26
-        targetSdk = 34
+        targetSdk = 36
         versionCode = 4
         versionName = "4.0"
 
