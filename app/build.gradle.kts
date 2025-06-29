@@ -13,8 +13,8 @@ android {
         applicationId = "org.simonolander.horloge"
         minSdk = 26
         targetSdk = 34
-        versionCode = 3
-        versionName = "3.0"
+        versionCode = 4
+        versionName = "4.0"
 
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
         vectorDrawables {
@@ -69,7 +69,6 @@ dependencies {
     implementation("io.insert-koin:koin-android")
     implementation("io.insert-koin:koin-androidx-compose")
 
-//    implementation("androidx.media3:media3-exoplayer:1.2.0-rc01")
     testImplementation("junit:junit:4.13.2")
     androidTestImplementation("androidx.test.ext:junit:1.1.5")
     androidTestImplementation("androidx.test.espresso:espresso-core:3.5.1")
