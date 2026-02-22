@@ -15,6 +15,7 @@ import androidx.compose.material.icons.filled.PlayArrow
 import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.Card
 import androidx.compose.material3.DropdownMenuItem
+import androidx.compose.material3.ExposedDropdownMenuAnchorType.Companion.PrimaryNotEditable
 import androidx.compose.material3.ExposedDropdownMenuBox
 import androidx.compose.material3.ExposedDropdownMenuDefaults
 import androidx.compose.material3.Icon
@@ -238,10 +239,9 @@ fun BeatView(
                 onExpandedChange = { expanded = it },
             ) {
                 TextField(
-                    modifier =
-                        Modifier
-                            .menuAnchor()
-                            .fillMaxWidth(),
+                    modifier = Modifier
+                        .menuAnchor(PrimaryNotEditable, true)
+                        .fillMaxWidth(),
                     readOnly = true,
                     value = beat.sound.name,
                     onValueChange = {},
@@ -253,9 +253,7 @@ fun BeatView(
                     expanded = expanded,
                     onDismissRequest = { expanded = false },
                 ) {
-                    Sounds.ALL
-                        .groupBy { it.group }
-                        .forEach { (group, sounds) ->
+                    Sounds.ALL.groupBy { it.group }.forEach { (group, sounds) ->
                             Text(
                                 modifier = Modifier.padding(start = 10.dp),
                                 text = group,
@@ -271,8 +269,7 @@ fun BeatView(
                                     contentPadding = ExposedDropdownMenuDefaults.ItemContentPadding,
                                     trailingIcon = {
                                         IconButton(onClick = {
-                                            MediaPlayer
-                                                .create(
+                                            MediaPlayer.create(
                                                     context,
                                                     sound.resourceId,
                                                 ).apply {
@@ -317,8 +314,7 @@ fun BeatView(
                     )
                 }
                 IconButton(onClick = {
-                    MediaPlayer
-                        .create(
+                    MediaPlayer.create(
                             context,
                             beat.sound.resourceId,
                         ).apply {
@@ -344,10 +340,7 @@ fun BeatView(
 }
 
 private fun toLong(string: String): Long =
-    string
-        .filter { it.isDigit() }
-        .takeIf { it.isNotEmpty() }
-        ?.toLong() ?: 0
+    string.filter { it.isDigit() }.takeIf { it.isNotEmpty() }?.toLong() ?: 0
 
 @Preview
 @Composable
@@ -356,22 +349,20 @@ fun ChimeFormPreview() {
     Surface(Modifier.padding(10.dp)) {
         HorlogeTheme {
             ChimeForm(
-                chime =
-                    Chime(
-                        id = "1",
-                        name = "Some chime",
-                        beats =
-                            listOf(
-                                Beat(
-                                    id = "1",
-                                    sound = Sounds.ALL.random(),
-                                    period = 1.seconds,
-                                    delay = 0.seconds,
-                                    volume = 1.0,
-                                ),
-                            ),
-                        volume = 0.8,
+                chime = Chime(
+                    id = "1",
+                    name = "Some chime",
+                    beats = listOf(
+                        Beat(
+                            id = "1",
+                            sound = Sounds.ALL.random(),
+                            period = 1.seconds,
+                            delay = 0.seconds,
+                            volume = 1.0,
+                        ),
                     ),
+                    volume = 0.8,
+                ),
                 onSave = { toast("Saved") },
                 onDelete = { toast("Deleted") },
             )
