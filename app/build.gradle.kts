@@ -62,6 +62,7 @@ dependencies {
     implementation("androidx.compose.ui:ui-graphics")
     implementation("androidx.compose.ui:ui-tooling-preview")
     implementation("androidx.compose.material3:material3")
+    implementation("androidx.compose.material:material-icons-core") // This is perhaps deprecated, and the suggestion is to import the drawables you need. See https://fonts.google.com/icons
     implementation("androidx.navigation:navigation-compose:2.9.7")
     implementation("app.cash.sqldelight:android-driver:2.2.1")
     implementation("app.cash.sqldelight:coroutines-extensions:2.2.1")
